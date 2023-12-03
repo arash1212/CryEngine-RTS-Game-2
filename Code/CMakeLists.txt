@@ -38,6 +38,12 @@ add_sources("SpawnPoints_uber.cpp"
 		"Components/SpawnPoints/PlayerSpawnPoint.cpp"
 		"Components/SpawnPoints/PlayerSpawnPoint.h"
 )
+add_sources("UI_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\UI"
+		"Components/UI/UIBoxSelection.cpp"
+		"Components/UI/UIBoxSelection.h"
+)
 add_sources("Utils_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Utils"

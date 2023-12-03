@@ -2,6 +2,8 @@
 #include <DefaultComponents/Input/InputComponent.h>
 #include <DefaultComponents/Cameras/CameraComponent.h>
 
+class CUIBoxSelectionComponent;
+
 static constexpr f32 PLAYER_DEFAULT_MOVEMENT_SPEED = 6.f;
 
 class CPlayerComponent final : public IEntityComponent
@@ -28,7 +30,10 @@ protected:
 	Cry::DefaultComponents::CInputComponent* m_pInputComponent = nullptr;
 	Cry::DefaultComponents::CCameraComponent* m_pCameraComponent = nullptr;
 
+	CUIBoxSelectionComponent* m_pUIBoxSelectionComponent = nullptr;
+
 private:
+	f32 m_MovementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;
 	Vec3 m_movementOffset = ZERO;
 
 private:

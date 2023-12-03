@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "GamePlugin.h"
 
+#include <Components/UI/UIBoxSelection.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -32,6 +34,9 @@ void CPlayerComponent::Initialize()
 	m_pCameraComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCameraComponent>();
 	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-55)), Vec3(0, 0, 10)));
 
+	//UIBoxSelectionComponent Initialization
+	m_pUIBoxSelectionComponent = m_pEntity->GetOrCreateComponent<CUIBoxSelectionComponent>();
+
 	//Inputs Initialization
 	InitInputs();
 }
@@ -39,7 +44,9 @@ void CPlayerComponent::Initialize()
 /******************************************************************************************************************************************************************************/
 Cry::Entity::EventFlags CPlayerComponent::GetEventMask() const
 {
-	return Cry::Entity::EEvent::GameplayStarted |
+	return 
+		Cry::Entity::EEvent::Initialize |
+		Cry::Entity::EEvent::GameplayStarted |
 		Cry::Entity::EEvent::Update |
 		Cry::Entity::EEvent::Reset;
 }
@@ -90,8 +97,8 @@ void CPlayerComponent::InitInputs()
 void CPlayerComponent::Move(f32 deltaTime)
 {
 	Vec3 position = m_pEntity->GetWorldPos();
-	position.x += m_movementOffset.x * PLAYER_DEFAULT_MOVEMENT_SPEED * deltaTime;
-	position.y += m_movementOffset.y * PLAYER_DEFAULT_MOVEMENT_SPEED * deltaTime;
+	position.x += m_movementOffset.x * m_MovementSpeed * deltaTime;
+	position.y += m_movementOffset.y * m_MovementSpeed * deltaTime;
 	m_pEntity->SetPos(position);
 }
 
