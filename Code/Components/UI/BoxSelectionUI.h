@@ -4,11 +4,11 @@
 
 struct IUIElement;
 
-class CUIBoxSelectionComponent final : public IEntityComponent
+class CBoxSelectionUIComponent final : public IEntityComponent
 {
 public:
-	CUIBoxSelectionComponent() = default;
-	virtual ~CUIBoxSelectionComponent() = default;
+	CBoxSelectionUIComponent() = default;
+	virtual ~CBoxSelectionUIComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -17,11 +17,11 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<CUIBoxSelectionComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<CBoxSelectionUIComponent>& desc)
 	{
 		desc.SetGUID("{2A7725A9-2447-4888-9E37-04C9786A9BF9}"_cry_guid);
 		desc.SetEditorCategory("UI");
-		desc.SetDescription("UI Box Selection Component");
+		desc.SetDescription("Box Selection UI Component");
 	}
 
 private:

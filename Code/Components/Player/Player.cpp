@@ -3,9 +3,13 @@
 #include "GamePlugin.h"
 
 #include <Utils/MouseUtils.h>
-#include <Components/UI/UIBoxSelection.h>
+#include <Components/UI/BoxSelectionUI.h>
+#include <Components/UI/InGameUI.h>
 #include <Components/Selectables/Selectable.h>
 #include <Components/Controller/AIController.h>
+#include <Components/Managers/ActionManager.h>
+
+#include <Actions/Units/UnitMoveAction.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -38,8 +42,11 @@ void CPlayerComponent::Initialize()
 	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-55)), Vec3(0, 0, 10)));
 
 	//UIBoxSelectionComponent Initialization
-	m_pUIBoxSelectionComponent = m_pEntity->GetOrCreateComponent<CUIBoxSelectionComponent>();
+	m_pBoxSelectionUIComponent = m_pEntity->GetOrCreateComponent<CBoxSelectionUIComponent>();
 	//m_pUIBoxSelectionComponent->SetCameraComponent(m_pCameraComponent);
+
+	//InGameUIComponent Initialization
+	m_pInGameUIComponent = m_pEntity->GetOrCreateComponent<CInGameUIComponent>();
 
 	//Inputs Initialization
 	InitInputs();
@@ -148,13 +155,13 @@ void CPlayerComponent::SelectionPressed(int activationMode, float value)
 	Vec2 mouseScreenPos = g_MouseUtils->GetCursorScreenPosition();
 
 	if (activationMode == eAAM_OnPress) {
-		m_pUIBoxSelectionComponent->SetBoxStartPos(mouseScreenPos);
+		m_pBoxSelectionUIComponent->SetBoxStartPos(mouseScreenPos);
 
 		DeSelectSelectables();
 	}
 
 	if (activationMode == eAAM_OnRelease) {
-		m_selectedEntities = m_pUIBoxSelectionComponent->GetEntitiesInsideSelectionBox(mouseScreenPos);
+		m_selectedEntities = m_pBoxSelectionUIComponent->GetEntitiesInsideSelectionBox(mouseScreenPos);
 
 		SelectSelectables();
 	}
@@ -206,12 +213,12 @@ void CPlayerComponent::DeSelectSelectables()
 void CPlayerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 {
 	for (IEntity* entity : m_selectedEntities) {
-		CAIControllerComponent* pAIControllerComponent = entity->GetComponent<CAIControllerComponent>();
-		if (!pAIControllerComponent) {
+		CActionManagerComponent* pActionManagerComponent = entity->GetComponent<CActionManagerComponent>();
+		if (!pActionManagerComponent) {
 			continue;
 		}
 
-		pAIControllerComponent->MoveTo(position);
+		pActionManagerComponent->AddAction(new UnitMoveAction(entity, position));
 	}
 }
 

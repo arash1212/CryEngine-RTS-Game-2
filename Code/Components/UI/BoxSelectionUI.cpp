@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "UIBoxSelection.h"
+#include "BoxSelectionUI.h"
 #include "GamePlugin.h"
 
 #include "FlashUI/FlashUI.h"
@@ -15,19 +15,19 @@
 
 namespace
 {
-	static void RegisterUIBoxSelectionComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterBoxSelectionUIComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CUIBoxSelectionComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CBoxSelectionUIComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterUIBoxSelectionComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterBoxSelectionUIComponent);
 }
 
 /******************************************************************************************************************************************************************************/
-void CUIBoxSelectionComponent::Initialize()
+void CBoxSelectionUIComponent::Initialize()
 {
 	//Initialize SelectionBoxUIElement and set it visible
 	m_pBoxSelectionUIElement = gEnv->pFlashUI->GetUIElement("box-selection");
@@ -37,7 +37,7 @@ void CUIBoxSelectionComponent::Initialize()
 }
 
 /******************************************************************************************************************************************************************************/
-Cry::Entity::EventFlags CUIBoxSelectionComponent::GetEventMask() const
+Cry::Entity::EventFlags CBoxSelectionUIComponent::GetEventMask() const
 {
 	return 
 		Cry::Entity::EEvent::Initialize |
@@ -47,7 +47,7 @@ Cry::Entity::EventFlags CUIBoxSelectionComponent::GetEventMask() const
 }
 
 /******************************************************************************************************************************************************************************/
-void CUIBoxSelectionComponent::ProcessEvent(const SEntityEvent& event)
+void CBoxSelectionUIComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -66,13 +66,13 @@ void CUIBoxSelectionComponent::ProcessEvent(const SEntityEvent& event)
 }
 
 /******************************************************************************************************************************************************************************/
-void CUIBoxSelectionComponent::SetBoxStartPos(Vec2 startPos)
+void CBoxSelectionUIComponent::SetBoxStartPos(Vec2 startPos)
 {
 	this->m_boxStartPos = startPos;
 }
 
 /******************************************************************************************************************************************************************************/
-DynArray<IEntity*> CUIBoxSelectionComponent::GetEntitiesInsideSelectionBox(Vec2 boxCurrentPos)
+DynArray<IEntity*> CBoxSelectionUIComponent::GetEntitiesInsideSelectionBox(Vec2 boxCurrentPos)
 {
 	DynArray<IEntity*> result;
 

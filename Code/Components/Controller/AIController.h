@@ -29,8 +29,9 @@ private:
 	Cry::DefaultComponents::CCharacterControllerComponent* m_pCharacterControllerComponent = nullptr;
 	IEntityNavigationComponent* m_pNavigationComponent = nullptr;
 
+private:
+	void Move();
 public:
-
 	void MoveTo(Vec3 position);
 	void LookAtMovePosition();
 };

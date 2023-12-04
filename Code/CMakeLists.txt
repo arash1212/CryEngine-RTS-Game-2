@@ -22,6 +22,17 @@ add_sources("Code_uber.cpp"
 		"GamePlugin.h"
 		"StdAfx.h"
 )
+add_sources("Actions_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Actions"
+		"Actions/IBaseAction.h"
+)
+add_sources("Units_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Actions\\\\Units"
+		"Actions/Units/UnitMoveAction.cpp"
+		"Actions/Units/UnitMoveAction.h"
+)
 add_sources("Components_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components"
@@ -31,6 +42,12 @@ add_sources("Controller_uber.cpp"
     SOURCE_GROUP "Components\\\\Controller"
 		"Components/Controller/AIController.cpp"
 		"Components/Controller/AIController.h"
+)
+add_sources("Managers_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Managers"
+		"Components/Managers/ActionManager.cpp"
+		"Components/Managers/ActionManager.h"
 )
 add_sources("Player_uber.cpp"
     PROJECTS Game
@@ -53,8 +70,10 @@ add_sources("SpawnPoints_uber.cpp"
 add_sources("UI_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\UI"
-		"Components/UI/UIBoxSelection.cpp"
-		"Components/UI/UIBoxSelection.h"
+		"Components/UI/BoxSelectionUI.cpp"
+		"Components/UI/InGameUI.cpp"
+		"Components/UI/BoxSelectionUI.h"
+		"Components/UI/InGameUI.h"
 )
 add_sources("Units_uber.cpp"
     PROJECTS Game
@@ -74,7 +93,9 @@ add_sources("Utils_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Utils"
 		"Utils/EntityUtils.cpp"
+		"Utils/MouseUtils.cpp"
 		"Utils/EntityUtils.h"
+		"Utils/MouseUtils.h"
 )
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/CVarOverrides.h")

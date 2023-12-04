@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "BaseUnit.h"
+#include "InGameUI.h"
 #include "GamePlugin.h"
 
-#include <Components/Units/UnitAnimation.h>
-#include <Components/Selectables/Selectable.h>
-#include <Components/Controller/AIController.h>
-#include <Components/Managers/ActionManager.h>
+#include "FlashUI/FlashUI.h"
+#include "Utils/EntityUtils.h"
+
+#include "CryEntitySystem/IEntitySystem.h"
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -14,35 +14,29 @@
 
 namespace
 {
-	static void RegisterBaseUnitComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterInGameUIComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CBaseUnitComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CInGameUIComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterBaseUnitComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterInGameUIComponent);
 }
 
 /******************************************************************************************************************************************************************************/
-void CBaseUnitComponent::Initialize()
+void CInGameUIComponent::Initialize()
 {
-	//SelectableComponent Initialization
-	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<CSelectableComponent>();
-
-	//UnitAnimationComponent Initialization
-	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<CUnitAnimationComponent>();
-
-	//AIControllerComponent Initialization
-	m_pAIControllerComponent = m_pEntity->GetOrCreateComponent<CAIControllerComponent>();
-
-	//ActionManagerComponent Initialization
-	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<CActionManagerComponent>();
+	//Initialize InGameUIElement and set it visible
+	m_pInGameUIElement = gEnv->pFlashUI->GetUIElement("in-game");
+	if (m_pInGameUIElement) {
+		m_pInGameUIElement->SetVisible(true);
+	}
 }
 
 /******************************************************************************************************************************************************************************/
-Cry::Entity::EventFlags CBaseUnitComponent::GetEventMask() const
+Cry::Entity::EventFlags CInGameUIComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::Initialize |
@@ -52,7 +46,7 @@ Cry::Entity::EventFlags CBaseUnitComponent::GetEventMask() const
 }
 
 /******************************************************************************************************************************************************************************/
-void CBaseUnitComponent::ProcessEvent(const SEntityEvent& event)
+void CInGameUIComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -68,6 +62,15 @@ void CBaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 	default:
 		break;
 	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CInGameUIComponent::AddActionbarItem(string imagePath)
+{
+	SUIArguments args;
+	args.AddArgument(imagePath);
+
+	m_pInGameUIElement->CallFunction("AddActionbarItem", args);
 }
 
 /******************************************************************************************************************************************************************************/

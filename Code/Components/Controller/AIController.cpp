@@ -67,14 +67,22 @@ void CAIControllerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
+		Move();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
+		m_pNavigationComponent->SetRequestedVelocity(ZERO);
 
 	}break;
 	default:
 		break;
 	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CAIControllerComponent::Move()
+{
+	m_pCharacterControllerComponent->SetVelocity(m_pNavigationComponent->GetRequestedVelocity());
 }
 
 /******************************************************************************************************************************************************************************/
@@ -90,7 +98,6 @@ void CAIControllerComponent::MoveTo(Vec3 position)
 	}
 
 	m_pNavigationComponent->NavigateTo(position);
-	m_pCharacterControllerComponent->SetVelocity(m_pNavigationComponent->GetRequestedVelocity());
 }
 
 /******************************************************************************************************************************************************************************/
