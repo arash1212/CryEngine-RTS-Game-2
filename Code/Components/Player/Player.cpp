@@ -97,8 +97,8 @@ void CPlayerComponent::InitInputs()
 void CPlayerComponent::Move(f32 deltaTime)
 {
 	Vec3 position = m_pEntity->GetWorldPos();
-	position.x += m_movementOffset.x * m_MovementSpeed * deltaTime;
-	position.y += m_movementOffset.y * m_MovementSpeed * deltaTime;
+	position.x += m_movementOffset.x * m_movementSpeed * deltaTime;
+	position.y += m_movementOffset.y * m_movementSpeed * deltaTime;
 	m_pEntity->SetPos(position);
 }
 

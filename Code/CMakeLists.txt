@@ -26,11 +26,23 @@ add_sources("Components_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components"
 )
+add_sources("Controller_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Controller"
+		"Components/Controller/AIController.cpp"
+		"Components/Controller/AIController.h"
+)
 add_sources("Player_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Player"
 		"Components/Player/Player.cpp"
 		"Components/Player/Player.h"
+)
+add_sources("Selectables_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Selectables"
+		"Components/Selectables/Selectable.cpp"
+		"Components/Selectables/Selectable.h"
 )
 add_sources("SpawnPoints_uber.cpp"
     PROJECTS Game
@@ -43,6 +55,20 @@ add_sources("UI_uber.cpp"
     SOURCE_GROUP "Components\\\\UI"
 		"Components/UI/UIBoxSelection.cpp"
 		"Components/UI/UIBoxSelection.h"
+)
+add_sources("Units_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Units"
+		"Components/Units/BaseUnit.cpp"
+		"Components/Units/UnitAnimation.cpp"
+		"Components/Units/BaseUnit.h"
+		"Components/Units/UnitAnimation.h"
+)
+add_sources("Units_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Units\\\\Units"
+		"Components/Units/Units/Soldier1Unit.cpp"
+		"Components/Units/Units/Soldier1Unit.h"
 )
 add_sources("Utils_uber.cpp"
     PROJECTS Game

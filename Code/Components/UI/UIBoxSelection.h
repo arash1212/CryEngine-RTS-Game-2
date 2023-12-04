@@ -26,5 +26,4 @@ private:
 	IUIElement* m_pBoxSelectionUIElement = nullptr;
 
 private:
-;
 };

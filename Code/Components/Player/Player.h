@@ -4,7 +4,7 @@
 
 class CUIBoxSelectionComponent;
 
-static constexpr f32 PLAYER_DEFAULT_MOVEMENT_SPEED = 6.f;
+static constexpr f32 PLAYER_DEFAULT_MOVEMENT_SPEED = 10.f;
 
 class CPlayerComponent final : public IEntityComponent
 {
@@ -33,7 +33,7 @@ protected:
 	CUIBoxSelectionComponent* m_pUIBoxSelectionComponent = nullptr;
 
 private:
-	f32 m_MovementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;
+	f32 m_movementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;
 	Vec3 m_movementOffset = ZERO;
 
 private:
