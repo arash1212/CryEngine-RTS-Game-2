@@ -26,8 +26,8 @@ namespace
 void CUnitAnimationComponent::Initialize()
 {
 	//AnimationComponent Initialization
-	m_pAnimationComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
-	m_pAnimationComponent->ResetCharacter();
+	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
+	//m_pAnimationComponent->ResetCharacter();
 }
 
 /******************************************************************************************************************************************************************************/

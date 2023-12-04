@@ -38,8 +38,8 @@ void CAIControllerComponent::Initialize()
 	m_movementProps.minSpeed = 3.5;
 	m_movementProps.maxSpeed = 5;
 	m_movementProps.lookAheadDistance = 0.1f;
-	m_movementProps.bStopAtEnd = true;
 	m_movementProps.maxDeceleration = 12;
+	m_movementProps.bStopAtEnd = true;
 	m_pNavigationComponent->SetMovementProperties(m_movementProps);
 
 	//Collision avoidance
@@ -75,6 +75,33 @@ void CAIControllerComponent::ProcessEvent(const SEntityEvent& event)
 	default:
 		break;
 	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CAIControllerComponent::MoveTo(Vec3 position)
+{
+	if (!m_pCharacterControllerComponent) {
+		CryWarning(EValidatorModule::VALIDATOR_MODULE_GAME, EValidatorSeverity::VALIDATOR_WARNING, "CAIControllerComponent : (MoveTo) m_pCharacterControllerComponent is null.");
+		return;
+	}
+	if (!m_pNavigationComponent) {
+		CryWarning(EValidatorModule::VALIDATOR_MODULE_GAME, EValidatorSeverity::VALIDATOR_WARNING, "CAIControllerComponent : (MoveTo) m_pNavigationComponent is null.");
+		return;
+	}
+
+	m_pNavigationComponent->NavigateTo(position);
+	m_pCharacterControllerComponent->SetVelocity(m_pNavigationComponent->GetRequestedVelocity());
+}
+
+/******************************************************************************************************************************************************************************/
+void CAIControllerComponent::LookAtMovePosition()
+{
+	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
+	if (velocity == ZERO) {
+		return;
+	}
+
+	m_pEntity->SetRotation(Quat::CreateRotationVDir(velocity));
 }
 
 /******************************************************************************************************************************************************************************/

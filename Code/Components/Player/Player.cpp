@@ -2,7 +2,10 @@
 #include "Player.h"
 #include "GamePlugin.h"
 
+#include <Utils/MouseUtils.h>
 #include <Components/UI/UIBoxSelection.h>
+#include <Components/Selectables/Selectable.h>
+#include <Components/Controller/AIController.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -36,6 +39,7 @@ void CPlayerComponent::Initialize()
 
 	//UIBoxSelectionComponent Initialization
 	m_pUIBoxSelectionComponent = m_pEntity->GetOrCreateComponent<CUIBoxSelectionComponent>();
+	//m_pUIBoxSelectionComponent->SetCameraComponent(m_pCameraComponent);
 
 	//Inputs Initialization
 	InitInputs();
@@ -73,24 +77,36 @@ void CPlayerComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-/******************************************************************************************************************************************************************************/
+
+/*=============================================================================================================================================
+																	INPUTS
+==============================================================================================================================================*/
+
 void CPlayerComponent::InitInputs()
 {
 	//MoveForward
-	m_pInputComponent->RegisterAction("player", "forward", [this](int activationMode, float value) {this->MoveForward(activationMode, value); });
+	m_pInputComponent->RegisterAction("player", "forward", [this](int activationMode, float value) {this->MoveForwardPressed(activationMode, value); });
 	m_pInputComponent->BindAction("player", "forward", eAID_KeyboardMouse, eKI_W);
 
 	//MoveBackward
-	m_pInputComponent->RegisterAction("player", "backward", [this](int activationMode, float value) {this->MoveBackward(activationMode, value); });
+	m_pInputComponent->RegisterAction("player", "backward", [this](int activationMode, float value) {this->MoveBackwardPressed(activationMode, value); });
 	m_pInputComponent->BindAction("player", "backward", eAID_KeyboardMouse, eKI_S);
 
 	//MoveRight
-	m_pInputComponent->RegisterAction("player", "right", [this](int activationMode, float value) {this->MoveRight(activationMode, value); });
+	m_pInputComponent->RegisterAction("player", "right", [this](int activationMode, float value) {this->MoveRightPressed(activationMode, value); });
 	m_pInputComponent->BindAction("player", "right", eAID_KeyboardMouse, eKI_D);
 
 	//MoveLeft
-	m_pInputComponent->RegisterAction("player", "left", [this](int activationMode, float value) {this->MoveLeft(activationMode, value); });
+	m_pInputComponent->RegisterAction("player", "left", [this](int activationMode, float value) {this->MoveLeftPressed(activationMode, value); });
 	m_pInputComponent->BindAction("player", "left", eAID_KeyboardMouse, eKI_A);
+
+	//Selection
+	m_pInputComponent->RegisterAction("player", "select", [this](int activationMode, float value) {this->SelectionPressed(activationMode, value); });
+	m_pInputComponent->BindAction("player", "select", eAID_KeyboardMouse, eKI_Mouse1);
+
+	//Command
+	m_pInputComponent->RegisterAction("player", "command", [this](int activationMode, float value) {this->CommandPressed(activationMode, value); });
+	m_pInputComponent->BindAction("player", "command", eAID_KeyboardMouse, eKI_Mouse2);
 }
 
 /******************************************************************************************************************************************************************************/
@@ -103,25 +119,100 @@ void CPlayerComponent::Move(f32 deltaTime)
 }
 
 /******************************************************************************************************************************************************************************/
-void CPlayerComponent::MoveForward(int activationMode, float value)
+void CPlayerComponent::MoveForwardPressed(int activationMode, float value)
 {
 	m_movementOffset.y = value;
 }
 
 /******************************************************************************************************************************************************************************/
-void CPlayerComponent::MoveBackward(int activationMode, float value)
+void CPlayerComponent::MoveBackwardPressed(int activationMode, float value)
 {
 	m_movementOffset.y = -value;
 }
 
 /******************************************************************************************************************************************************************************/
-void CPlayerComponent::MoveRight(int activationMode, float value)
+void CPlayerComponent::MoveRightPressed(int activationMode, float value)
 {
 	m_movementOffset.x = value;
 }
 
 /******************************************************************************************************************************************************************************/
-void CPlayerComponent::MoveLeft(int activationMode, float value)
+void CPlayerComponent::MoveLeftPressed(int activationMode, float value)
 {
 	m_movementOffset.x = -value;
 }
+
+/******************************************************************************************************************************************************************************/
+void CPlayerComponent::SelectionPressed(int activationMode, float value)
+{
+	Vec2 mouseScreenPos = g_MouseUtils->GetCursorScreenPosition();
+
+	if (activationMode == eAAM_OnPress) {
+		m_pUIBoxSelectionComponent->SetBoxStartPos(mouseScreenPos);
+
+		DeSelectSelectables();
+	}
+
+	if (activationMode == eAAM_OnRelease) {
+		m_selectedEntities = m_pUIBoxSelectionComponent->GetEntitiesInsideSelectionBox(mouseScreenPos);
+
+		SelectSelectables();
+	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CPlayerComponent::CommandPressed(int activationMode, float value)
+{
+	Vec3 mousePos = g_MouseUtils->GetPositionUnderCursor();
+	if (activationMode == eAAM_OnRelease) {
+		CommandSelectedUnitsToMoveTo(mousePos);
+	}
+}
+
+/*=============================================================================================================================================
+																	Selections
+==============================================================================================================================================*/
+
+void CPlayerComponent::SelectSelectables()
+{
+	for (IEntity* entity : m_selectedEntities) {
+		CSelectableComponent* pSelectableComponent = entity->GetComponent<CSelectableComponent>();
+		if (!pSelectableComponent) {
+			continue;
+		}
+
+		pSelectableComponent->Select();
+	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CPlayerComponent::DeSelectSelectables()
+{
+	for (IEntity* entity : m_selectedEntities) {
+		CSelectableComponent* pSelectableComponent = entity->GetComponent<CSelectableComponent>();
+		if (!pSelectableComponent) {
+			continue;
+		}
+
+		pSelectableComponent->DeSelect();
+	}
+}
+
+
+/*=============================================================================================================================================
+																	Commands
+==============================================================================================================================================*/
+
+void CPlayerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
+{
+	for (IEntity* entity : m_selectedEntities) {
+		CAIControllerComponent* pAIControllerComponent = entity->GetComponent<CAIControllerComponent>();
+		if (!pAIControllerComponent) {
+			continue;
+		}
+
+		pAIControllerComponent->MoveTo(position);
+	}
+}
+
+/******************************************************************************************************************************************************************************/

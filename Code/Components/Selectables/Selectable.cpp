@@ -28,6 +28,7 @@ void CSelectableComponent::Initialize()
 	//DecalComponent Initialization
 	m_pDecalComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CDecalComponent>();
 	m_pDecalComponent->SetMaterialFileName("decals/selectable/selectable_decal_mat.mtl");
+	m_pDecalComponent->SetDepth(5.f);
 }
 
 /******************************************************************************************************************************************************************************/

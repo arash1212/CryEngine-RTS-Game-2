@@ -1,6 +1,8 @@
 #pragma once
 
 class CSelectableComponent;
+class CUnitAnimationComponent;
+class CAIControllerComponent;
 
 class CBaseUnitComponent : public IEntityComponent
 {
@@ -24,6 +26,8 @@ public:
 
 private:
 	CSelectableComponent* m_pSelectableComponent = nullptr;
+	CUnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
+	CAIControllerComponent* m_pAIControllerComponent = nullptr;
 
 private:
 };

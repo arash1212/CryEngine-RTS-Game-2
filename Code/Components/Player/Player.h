@@ -36,14 +36,26 @@ private:
 	f32 m_movementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;
 	Vec3 m_movementOffset = ZERO;
 
+	//Selections
+	DynArray<IEntity*> m_selectedEntities;
+
 private:
 	void InitInputs();
 
 	void Move(f32 deltaTime);
 
-	//Input Handlers;
-	void MoveForward(int activationMode, float value);
-	void MoveBackward(int activationMode, float value);
-	void MoveRight(int activationMode, float value);
-	void MoveLeft(int activationMode, float value);
+	//Input Handlers
+	void MoveForwardPressed(int activationMode, float value);
+	void MoveBackwardPressed(int activationMode, float value);
+	void MoveRightPressed(int activationMode, float value);
+	void MoveLeftPressed(int activationMode, float value);
+	void SelectionPressed(int activationMode, float value);
+	void CommandPressed(int activationMode, float value);
+
+	//Selection Functions
+	void SelectSelectables();
+	void DeSelectSelectables();
+
+	//Commands
+	void CommandSelectedUnitsToMoveTo(Vec3 position);
 };

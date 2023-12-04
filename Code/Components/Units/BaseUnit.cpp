@@ -2,7 +2,9 @@
 #include "BaseUnit.h"
 #include "GamePlugin.h"
 
+#include <Components/Units/UnitAnimation.h>
 #include <Components/Selectables/Selectable.h>
+#include <Components/Controller/AIController.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -27,6 +29,12 @@ void CBaseUnitComponent::Initialize()
 {
 	//SelectableComponent Initialization
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<CSelectableComponent>();
+
+	//UnitAnimationComponent Initialization
+	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<CUnitAnimationComponent>();
+
+	//AIControllerComponent Initialization
+	m_pAIControllerComponent = m_pEntity->GetOrCreateComponent<CAIControllerComponent>();
 }
 
 /******************************************************************************************************************************************************************************/

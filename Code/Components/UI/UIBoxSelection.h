@@ -1,5 +1,7 @@
 #pragma once
 
+//#include <DefaultComponents/Cameras/CameraComponent.h>
+
 struct IUIElement;
 
 class CUIBoxSelectionComponent final : public IEntityComponent
@@ -23,7 +25,15 @@ public:
 	}
 
 private:
+	//Cry::DefaultComponents::CCameraComponent* m_pCameraComponent = nullptr;
 	IUIElement* m_pBoxSelectionUIElement = nullptr;
-
+	
 private:
+	Vec2 m_boxStartPos = ZERO;
+
+public:
+	void SetBoxStartPos(Vec2 startPos);
+	DynArray<IEntity*> GetEntitiesInsideSelectionBox(Vec2 boxCurrentPos);
+
+	//void SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent);
 };

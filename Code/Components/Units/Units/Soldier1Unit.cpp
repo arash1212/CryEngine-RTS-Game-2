@@ -27,9 +27,11 @@ namespace
 /******************************************************************************************************************************************************************************/
 void CSoldier1UnitComponent::Initialize()
 {
+	CBaseUnitComponent::Initialize();
+
 	//AnimationComponent Initialization
-	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
-	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(180))), Vec3(0)));
+	m_pAnimationComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
+	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
 	m_pAnimationComponent->SetCharacterFile("Objects/Characters/units/soldier1/soldier_1.cdf");
 	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/soldier1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
@@ -38,9 +40,6 @@ void CSoldier1UnitComponent::Initialize()
 	m_pAnimationComponent->SetAnimationDrivenMotion(false);
 	m_pAnimationComponent->LoadFromDisk();
 	m_pAnimationComponent->ResetCharacter();
-
-	//UnitAnimationComponent Initialization
-	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<CUnitAnimationComponent>();
 }
 
 /******************************************************************************************************************************************************************************/
