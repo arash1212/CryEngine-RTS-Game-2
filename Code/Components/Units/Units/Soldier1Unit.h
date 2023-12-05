@@ -3,6 +3,8 @@
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 #include <Components/Units/BaseUnit.h>
 
+class CUIItemProviderComponent;
+
 class CSoldier1UnitComponent final : public CBaseUnitComponent
 {
 public:
@@ -27,6 +29,7 @@ public:
 
 private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
+	CUIItemProviderComponent* m_pUIItemProviderComponent = nullptr;
 
 private:
 };

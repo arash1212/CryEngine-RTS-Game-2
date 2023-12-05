@@ -47,7 +47,9 @@ add_sources("Managers_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Managers"
 		"Components/Managers/ActionManager.cpp"
+		"Components/Managers/UnitStateManager.cpp"
 		"Components/Managers/ActionManager.h"
+		"Components/Managers/UnitStateManager.h"
 )
 add_sources("Player_uber.cpp"
     PROJECTS Game
@@ -88,6 +90,23 @@ add_sources("Units_uber.cpp"
     SOURCE_GROUP "Components\\\\Units\\\\Units"
 		"Components/Units/Units/Soldier1Unit.cpp"
 		"Components/Units/Units/Soldier1Unit.h"
+)
+add_sources("UIItems_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "UIItems"
+		"UIItems/IBaseUIItem.h"
+)
+add_sources("Items_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "UIItems\\\\Items"
+)
+add_sources("Actionbar_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "UIItems\\\\Items\\\\Actionbar"
+		"UIItems/Items/Actionbar/CancelUIItem.cpp"
+		"UIItems/Items/Actionbar/ChangeStanceUIItem.cpp"
+		"UIItems/Items/Actionbar/CancelUIItem.h"
+		"UIItems/Items/Actionbar/ChangeStanceUIItem.h"
 )
 add_sources("Utils_uber.cpp"
     PROJECTS Game

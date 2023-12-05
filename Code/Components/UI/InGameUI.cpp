@@ -71,6 +71,12 @@ void CInGameUIComponent::AddActionbarItem(string imagePath)
 	args.AddArgument(imagePath);
 
 	m_pInGameUIElement->CallFunction("AddActionbarItem", args);
+
+}
+/******************************************************************************************************************************************************************************/
+void CInGameUIComponent::ClearActionbarItems()
+{
+	m_pInGameUIElement->CallFunction("ClearActionbar");
 }
 
 /******************************************************************************************************************************************************************************/

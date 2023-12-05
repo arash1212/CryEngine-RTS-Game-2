@@ -15,10 +15,10 @@ UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunnin
 
 	//IsRunning
 	if (m_isRunning) {
-		m_pUnitStateManagerComponent->SetStanceToRun();
+		m_pUnitStateManagerComponent->SetStance(EUnitStance::RUNNING);
 	}
 	else {
-		m_pUnitStateManagerComponent->SetStanceToWalk();
+		m_pUnitStateManagerComponent->SetStance(EUnitStance::STANDING);
 	}
 }
 

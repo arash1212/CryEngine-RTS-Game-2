@@ -4,6 +4,7 @@
 
 class CBoxSelectionUIComponent;
 class CInGameUIComponent;
+class IBaseUIItem;
 
 static constexpr f32 PLAYER_DEFAULT_MOVEMENT_SPEED = 10.f;
 
@@ -46,6 +47,9 @@ private:
 	//Selections
 	DynArray<IEntity*> m_selectedEntities;
 
+	//UIItems
+	DynArray<IBaseUIItem*> m_currentUIItems;
+
 private:
 	void InitInputs();
 
@@ -65,4 +69,7 @@ private:
 
 	//Commands
 	void CommandSelectedUnitsToMoveTo(Vec3 position);
+
+	//UIItems
+	void UpdateActionbarItems();
 };

@@ -8,8 +8,9 @@
 #include <Components/Selectables/Selectable.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/ActionManager.h>
-
 #include <Actions/Units/UnitMoveAction.h>
+#include <UIItems/IBaseUIItem.h>
+#include <Components/Selectables/UIItemProvider.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -200,12 +201,16 @@ void CPlayerComponent::SelectSelectables()
 		}
 
 		pSelectableComponent->Select();
+		m_selectedEntities.append(entity);
 	}
+
+	UpdateActionbarItems();
 }
 
 /******************************************************************************************************************************************************************************/
 void CPlayerComponent::DeSelectSelectables()
 {
+	m_pInGameUIComponent->ClearActionbarItems();
 	for (IEntity* entity : m_selectedEntities) {
 		CSelectableComponent* pSelectableComponent = entity->GetComponent<CSelectableComponent>();
 		if (!pSelectableComponent) {
@@ -214,6 +219,8 @@ void CPlayerComponent::DeSelectSelectables()
 
 		pSelectableComponent->DeSelect();
 	}
+
+	m_selectedEntities.clear();
 }
 
 
@@ -230,6 +237,26 @@ void CPlayerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 		}
 
 		pActionManagerComponent->AddAction(new UnitMoveAction(entity, position, m_rightClickCount >= 2));
+	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CPlayerComponent::UpdateActionbarItems()
+{
+	if (m_selectedEntities.size() <= 0) {
+		return;
+	}
+
+	CUIItemProviderComponent* pUIItemProviderComponent = m_selectedEntities[0]->GetComponent<CUIItemProviderComponent>();
+	if (m_selectedEntities.size() > 1) {
+		m_currentUIItems = pUIItemProviderComponent->GetGeneralUIItems();
+	}
+	else if (m_selectedEntities.size() == 1) {
+		m_currentUIItems = pUIItemProviderComponent->GetUniqueUIItems();
+	}
+
+	for (IBaseUIItem* item : m_currentUIItems) {
+		m_pInGameUIComponent->AddActionbarItem(item->GetImagePath());
 	}
 }
 

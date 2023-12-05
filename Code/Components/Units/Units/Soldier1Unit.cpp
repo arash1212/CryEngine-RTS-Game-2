@@ -6,6 +6,9 @@
 #include <Components/Units/BaseUnit.h>
 #include <CryAISystem/Components/IEntityNavigationComponent.h>
 
+#include <UIItems/Items/Actionbar/CancelUIItem.h>
+#include <UIItems/Items/Actionbar/ChangeStanceUIItem.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -40,6 +43,11 @@ void CSoldier1UnitComponent::Initialize()
 	m_pAnimationComponent->SetAnimationDrivenMotion(false);
 	m_pAnimationComponent->LoadFromDisk();
 	m_pAnimationComponent->ResetCharacter();
+
+	//UIItemProviderComponent Initialization
+	m_pUIItemProviderComponent = m_pEntity->GetComponent<CUIItemProviderComponent>();
+	m_pUIItemProviderComponent->AddGeneralUIItem(new CancelUIItem(m_pEntity));
+	m_pUIItemProviderComponent->AddGeneralUIItem(new ChangeStanceUIItem(m_pEntity));
 }
 
 /******************************************************************************************************************************************************************************/

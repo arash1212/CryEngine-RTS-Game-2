@@ -6,6 +6,7 @@ class CAIControllerComponent;
 class CActionManagerComponent;
 class CUnitAnimationComponent;
 class CUnitStateManagerComponent;
+class CUIItemProviderComponent;
 
 class CBaseUnitComponent : public IEntityComponent
 {
@@ -33,6 +34,7 @@ private:
 	CActionManagerComponent* m_pActionManagerComponent = nullptr;
 	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
 	CUnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
+	CUIItemProviderComponent* m_pUIItemProviderComponent = nullptr;
 
 private:
 };

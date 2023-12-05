@@ -8,6 +8,7 @@
 #include <Components/Managers/ActionManager.h>
 #include <Components/Managers/UnitStateManager.h>
 #include <Components/Units/UnitAnimation.h>
+#include <Components/Selectables/UIItemProvider.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -47,6 +48,9 @@ void CBaseUnitComponent::Initialize()
 
 	//UnitAnimationComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<CUnitAnimationComponent>();
+
+	//UIItemProviderComponent Initialization
+	m_pUIItemProviderComponent = m_pEntity->GetOrCreateComponent<CUIItemProviderComponent>();
 }
 
 /******************************************************************************************************************************************************************************/

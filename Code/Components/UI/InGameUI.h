@@ -28,4 +28,5 @@ private:
 
 public:
 	void AddActionbarItem(string imagePath);
+	void ClearActionbarItems();
 };

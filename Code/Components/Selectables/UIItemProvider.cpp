@@ -1,9 +1,6 @@
 #include "StdAfx.h"
-#include "UnitStateManager.h"
+#include "UIItemProvider.h"
 #include "GamePlugin.h"
-
-#include <Actions/IBaseAction.h>
-#include <Components/Controller/AIController.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -12,35 +9,35 @@
 
 namespace
 {
-	static void RegisterUnitStateManagerComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterUIItemProviderComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CUnitStateManagerComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CUIItemProviderComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterUnitStateManagerComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterUIItemProviderComponent);
 }
 
 /******************************************************************************************************************************************************************************/
-void CUnitStateManagerComponent::Initialize()
+void CUIItemProviderComponent::Initialize()
 {
-	//IControllerComponent Initialization
-	m_pAIControllerComponent = m_pEntity->GetComponent<CAIControllerComponent>();
+
 }
 
 /******************************************************************************************************************************************************************************/
-Cry::Entity::EventFlags CUnitStateManagerComponent::GetEventMask() const
+Cry::Entity::EventFlags CUIItemProviderComponent::GetEventMask() const
 {
 	return
+		Cry::Entity::EEvent::Initialize |
 		Cry::Entity::EEvent::GameplayStarted |
 		Cry::Entity::EEvent::Update |
 		Cry::Entity::EEvent::Reset;
 }
 
 /******************************************************************************************************************************************************************************/
-void CUnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
+void CUIItemProviderComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -48,14 +45,9 @@ void CUnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		//f32 DeltaTime = event.fParam[0];
-
-		UpdateSpeed();
-		UpdateState();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
-
 
 	}break;
 	default:
@@ -64,64 +56,33 @@ void CUnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
 }
 
 /******************************************************************************************************************************************************************************/
-void CUnitStateManagerComponent::UpdateState()
+void CUIItemProviderComponent::AddGeneralUIItem(IBaseUIItem* item)
 {
-	if (!m_pAIControllerComponent) {
-		m_pAIControllerComponent = m_pEntity->GetComponent<CAIControllerComponent>();
-		return;
-	}
-
-	if (!m_pAIControllerComponent->IsMoving()) {
-		m_pUnitState = EUnitState::IDLE;
-
-		if (m_pUnitStance == EUnitStance::RUNNING) {
-			m_pUnitStance = EUnitStance::STANDING;
-		}
-	}
-	else if (m_pAIControllerComponent->IsMoving() ) {
-		m_pUnitState = EUnitState::WALKING;
-	}
+	this->m_generalUIItems.append(item);
 }
 
 /******************************************************************************************************************************************************************************/
-void CUnitStateManagerComponent::UpdateSpeed()
+void CUIItemProviderComponent::AddUniqueUIItem(IBaseUIItem* item)
 {
-	if (m_pUnitStance == EUnitStance::PRONE) {
-		m_currentSpeed = m_proneSpeed;
-	}
-	else if (m_pUnitStance == EUnitStance::CROUCH) {
-		m_currentSpeed = m_crouchSpeed;
-	}
-	else if (m_pUnitStance == EUnitStance::STANDING) {
-		m_currentSpeed = m_walkSpeed;
-	}
-	else if (m_pUnitStance == EUnitStance::RUNNING) {
-		m_currentSpeed = m_runSpeed;
-	}
+	this->m_uniqueUIItems.append(item);
 }
 
 /******************************************************************************************************************************************************************************/
-EUnitState CUnitStateManagerComponent::GetState()
+DynArray<IBaseUIItem*> CUIItemProviderComponent::GetGeneralUIItems()
 {
-	return this->m_pUnitState;
+	return m_generalUIItems;
 }
 
 /******************************************************************************************************************************************************************************/
-void CUnitStateManagerComponent::SetStance(EUnitStance newStance)
+DynArray<IBaseUIItem*> CUIItemProviderComponent::GetUniqueUIItems()
 {
-	this->m_pUnitStance = newStance;
+	return m_uniqueUIItems;
 }
 
 /******************************************************************************************************************************************************************************/
-EUnitStance CUnitStateManagerComponent::GetStance()
+DynArray<IBaseUIItem*> CUIItemProviderComponent::GetAllUIItems()
 {
-	return this->m_pUnitStance;
-}
-
-/******************************************************************************************************************************************************************************/
-f32 CUnitStateManagerComponent::GetCurrentSpeed()
-{
-	return this->m_currentSpeed;
+	return m_generalUIItems + m_uniqueUIItems;
 }
 
 /******************************************************************************************************************************************************************************/

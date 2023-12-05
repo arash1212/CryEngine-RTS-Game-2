@@ -52,9 +52,9 @@ private:
 
 public:
 	EUnitState GetState();
-	EUnitStance GetStance();
-	f32 GetCurrentSpeed();
 
-	void SetStanceToRun();
-	void SetStanceToWalk();
+	void SetStance(EUnitStance newStance);
+	EUnitStance GetStance();
+
+	f32 GetCurrentSpeed();
 };
