@@ -77,6 +77,12 @@ void CInGameUIComponent::AddActionbarItem(string imagePath)
 void CInGameUIComponent::ClearActionbarItems()
 {
 	m_pInGameUIElement->CallFunction("ClearActionbar");
+
+}
+/******************************************************************************************************************************************************************************/
+void CInGameUIComponent::SetEventListener(IUIElementEventListener* listener)
+{
+	this->m_pInGameUIElement->AddEventListener(listener, "IN_GAME_UI_COMPONENT_UI_EVENT_LISTENER");
 }
 
 /******************************************************************************************************************************************************************************/

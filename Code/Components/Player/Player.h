@@ -5,6 +5,7 @@
 class CBoxSelectionUIComponent;
 class CInGameUIComponent;
 class IBaseUIItem;
+class UIElementEventListener;
 
 static constexpr f32 PLAYER_DEFAULT_MOVEMENT_SPEED = 10.f;
 
@@ -34,6 +35,7 @@ protected:
 
 	CBoxSelectionUIComponent* m_pBoxSelectionUIComponent = nullptr;
 	CInGameUIComponent* m_pInGameUIComponent = nullptr;
+	UIElementEventListener* m_pUIElementEventListener = nullptr;
 
 private:
 	f32 m_movementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;
@@ -72,4 +74,8 @@ private:
 
 	//UIItems
 	void UpdateActionbarItems();
+
+public:
+	//UIItems
+	void ExecuteActionbarItem(int32 index);
 };

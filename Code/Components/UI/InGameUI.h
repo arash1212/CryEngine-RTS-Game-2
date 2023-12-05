@@ -1,6 +1,7 @@
 #pragma once
 
 struct IUIElement;
+struct IUIElementEventListener;
 
 class CInGameUIComponent final : public IEntityComponent
 {
@@ -29,4 +30,5 @@ private:
 public:
 	void AddActionbarItem(string imagePath);
 	void ClearActionbarItems();
+	void SetEventListener(IUIElementEventListener* listener);
 };

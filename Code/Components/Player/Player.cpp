@@ -11,6 +11,7 @@
 #include <Actions/Units/UnitMoveAction.h>
 #include <UIItems/IBaseUIItem.h>
 #include <Components/Selectables/UIItemProvider.h>
+#include <Listeners/UIElementEventListener.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -42,12 +43,18 @@ void CPlayerComponent::Initialize()
 	m_pCameraComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCameraComponent>();
 	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-55)), Vec3(0, 0, 10)));
 
+	//UIElementEventListener Initialization
+	m_pUIElementEventListener = new UIElementEventListener();
+	m_pUIElementEventListener->SetPlayerComponent(this);
+
 	//UIBoxSelectionComponent Initialization
 	m_pBoxSelectionUIComponent = m_pEntity->GetOrCreateComponent<CBoxSelectionUIComponent>();
+	m_pBoxSelectionUIComponent->SetEventListener(m_pUIElementEventListener);
 	//m_pUIBoxSelectionComponent->SetCameraComponent(m_pCameraComponent);
 
 	//InGameUIComponent Initialization
 	m_pInGameUIComponent = m_pEntity->GetOrCreateComponent<CInGameUIComponent>();
+	m_pInGameUIComponent->SetEventListener(m_pUIElementEventListener);
 
 	//Inputs Initialization
 	InitInputs();
@@ -161,6 +168,9 @@ void CPlayerComponent::MoveLeftPressed(int activationMode, float value)
 void CPlayerComponent::SelectionPressed(int activationMode, float value)
 {
 	Vec2 mouseScreenPos = g_MouseUtils->GetCursorScreenPosition();
+	if (m_pUIElementEventListener->IsMouseOverUI()) {
+		return;
+	}
 
 	if (activationMode == eAAM_OnPress) {
 		m_pBoxSelectionUIComponent->SetBoxStartPos(mouseScreenPos);
@@ -221,6 +231,7 @@ void CPlayerComponent::DeSelectSelectables()
 	}
 
 	m_selectedEntities.clear();
+	m_currentUIItems.clear();
 }
 
 
@@ -258,6 +269,13 @@ void CPlayerComponent::UpdateActionbarItems()
 	for (IBaseUIItem* item : m_currentUIItems) {
 		m_pInGameUIComponent->AddActionbarItem(item->GetImagePath());
 	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CPlayerComponent::ExecuteActionbarItem(int32 index)
+{
+	CryLog("action bar index : %i", index);
+	m_currentUIItems[index]->Execute();
 }
 
 /******************************************************************************************************************************************************************************/

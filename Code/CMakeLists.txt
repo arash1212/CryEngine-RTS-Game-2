@@ -61,7 +61,9 @@ add_sources("Selectables_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables"
 		"Components/Selectables/Selectable.cpp"
+		"Components/Selectables/UIItemProvider.cpp"
 		"Components/Selectables/Selectable.h"
+		"Components/Selectables/UIItemProvider.h"
 )
 add_sources("SpawnPoints_uber.cpp"
     PROJECTS Game
@@ -90,6 +92,12 @@ add_sources("Units_uber.cpp"
     SOURCE_GROUP "Components\\\\Units\\\\Units"
 		"Components/Units/Units/Soldier1Unit.cpp"
 		"Components/Units/Units/Soldier1Unit.h"
+)
+add_sources("Listeners_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Listeners"
+		"Listeners/UIElementEventListener.cpp"
+		"Listeners/UIElementEventListener.h"
 )
 add_sources("UIItems_uber.cpp"
     PROJECTS Game

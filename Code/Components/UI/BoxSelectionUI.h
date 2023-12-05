@@ -3,6 +3,7 @@
 //#include <DefaultComponents/Cameras/CameraComponent.h>
 
 struct IUIElement;
+struct IUIElementEventListener;
 
 class CBoxSelectionUIComponent final : public IEntityComponent
 {
@@ -34,6 +35,7 @@ private:
 public:
 	void SetBoxStartPos(Vec2 startPos);
 	DynArray<IEntity*> GetEntitiesInsideSelectionBox(Vec2 boxCurrentPos);
+	void SetEventListener(IUIElementEventListener* listener);
 
 	//void SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent);
 };

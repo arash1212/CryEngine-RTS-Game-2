@@ -12,6 +12,7 @@ UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunnin
 	this->m_isRunning = isRunning;
 
 	this->m_pUnitStateManagerComponent = m_pEntity->GetComponent<CUnitStateManagerComponent>();
+	this->pAIControllerComponent = m_pEntity->GetComponent<CAIControllerComponent>();
 
 	//IsRunning
 	if (m_isRunning) {
@@ -24,7 +25,6 @@ UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunnin
 
 void UnitMoveAction::Execute()
 {
-	CAIControllerComponent* pAIControllerComponent = m_pEntity->GetComponent<CAIControllerComponent>();
 	if (!pAIControllerComponent) {
 		CryWarning(EValidatorModule::VALIDATOR_MODULE_GAME, EValidatorSeverity::VALIDATOR_WARNING, "UnitMoveAction : (Execute) AIControllerComponent cannot be null.Action cancelled.");
 		Cancel();
@@ -49,7 +49,8 @@ void UnitMoveAction::Execute()
 
 void UnitMoveAction::Cancel()
 {
-	m_isDone = true;
+	this->m_isDone = true;
+	this->pAIControllerComponent->StopMoving();
 }
 
 bool UnitMoveAction::IsDone()

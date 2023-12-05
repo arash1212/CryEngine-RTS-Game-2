@@ -117,6 +117,12 @@ void CAIControllerComponent::LookAtMovePosition()
 }
 
 /******************************************************************************************************************************************************************************/
+void CAIControllerComponent::StopMoving()
+{
+	this->m_pNavigationComponent->NavigateTo(m_pEntity->GetWorldPos());
+}
+
+/******************************************************************************************************************************************************************************/
 bool CAIControllerComponent::IsMoving()
 {
 	return m_pCharacterControllerComponent->IsWalking();

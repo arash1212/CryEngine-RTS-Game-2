@@ -37,6 +37,7 @@ private:
 public:
 	void MoveTo(Vec3 position);
 	void LookAtMovePosition();
+	void StopMoving();
 
 	bool IsMoving();
 	Vec3 GetVelocity();

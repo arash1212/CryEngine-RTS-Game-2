@@ -150,6 +150,12 @@ DynArray<IEntity*> CBoxSelectionUIComponent::GetEntitiesInsideSelectionBox(Vec2 
 }
 
 /******************************************************************************************************************************************************************************/
+void CBoxSelectionUIComponent::SetEventListener(IUIElementEventListener* listener)
+{
+	this->m_pBoxSelectionUIElement->AddEventListener(listener, "BOX_SELECTION_COMPONENT_UI_EVENT_LISTENER");
+}
+
+/******************************************************************************************************************************************************************************/
 /*
 void CUIBoxSelectionComponent::SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent)
 {

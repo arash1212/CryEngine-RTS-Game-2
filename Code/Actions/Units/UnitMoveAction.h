@@ -3,6 +3,7 @@
 #include "Actions/IBaseAction.h"
 
 class CUnitStateManagerComponent;
+class CAIControllerComponent;
 
 class UnitMoveAction : public IBaseAction{
 
@@ -13,6 +14,7 @@ public:
 protected:
 	IEntity* m_pEntity = nullptr;
 	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
+	CAIControllerComponent* pAIControllerComponent = nullptr;
 
 	bool m_isDone = false;
 	bool m_isRunning = false;
