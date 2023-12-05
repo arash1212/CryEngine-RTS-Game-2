@@ -18,7 +18,7 @@ void ChangeStanceUIItem::Execute()
 	CUnitStateManagerComponent* pUnitStateManagerComponent = m_pEntity->GetComponent<CUnitStateManagerComponent>();
 	if (pUnitStateManagerComponent) {
 		EUnitStance stance = pUnitStateManagerComponent->GetStance();
-		pUnitStateManagerComponent->SetStance(static_cast<EUnitStance>((static_cast<int>(stance) + 1) % (static_cast<int>(EUnitStance::PRONE) + 1)));
+		pUnitStateManagerComponent->SetStance(static_cast<EUnitStance>((static_cast<int>(stance) + 1) % (static_cast<int>(EUnitStance::STANDING) + 1)));
 	}
 }
 

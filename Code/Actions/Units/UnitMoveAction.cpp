@@ -18,7 +18,7 @@ UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunnin
 	if (m_isRunning) {
 		m_pUnitStateManagerComponent->SetStance(EUnitStance::RUNNING);
 	}
-	else {
+	else if (!m_isRunning && m_pUnitStateManagerComponent->GetStance() == EUnitStance::RUNNING) {
 		m_pUnitStateManagerComponent->SetStance(EUnitStance::STANDING);
 	}
 }
