@@ -4,6 +4,8 @@
 
 struct IEntityNavigationComponent;
 
+class CUnitStateManagerComponent;
+
 class CAIControllerComponent final : public IEntityComponent
 {
 public:
@@ -28,10 +30,14 @@ public:
 private:
 	Cry::DefaultComponents::CCharacterControllerComponent* m_pCharacterControllerComponent = nullptr;
 	IEntityNavigationComponent* m_pNavigationComponent = nullptr;
+	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
 
 private:
 	void Move();
 public:
 	void MoveTo(Vec3 position);
 	void LookAtMovePosition();
+
+	bool IsMoving();
+	Vec3 GetVelocity();
 };

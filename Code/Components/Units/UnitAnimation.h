@@ -2,6 +2,9 @@
 
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 
+class CUnitStateManagerComponent;
+class CAIControllerComponent;
+
 class CUnitAnimationComponent final : public IEntityComponent
 {
 public:
@@ -24,6 +27,22 @@ public:
 
 private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
+	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
+	CAIControllerComponent* m_pAIControllerComponent = nullptr;
 
 private:
+//////////Animations
+//Humanoid
+	FragmentID m_idleFragmentId;
+	FragmentID m_runFragmentId;
+	FragmentID m_walkFragmentId;
+	FragmentID m_attack1FragmentId;
+	FragmentID m_attack2FragmentId;
+	FragmentID m_attack3FragmentId;
+	FragmentID m_crouchFragmentId;
+	FragmentID m_proneFragmentId;
+	FragmentID m_activeFragmentId;
+
+private:
+	void UpdateAnimations();
 };

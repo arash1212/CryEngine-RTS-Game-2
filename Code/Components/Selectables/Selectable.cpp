@@ -47,6 +47,7 @@ void CSelectableComponent::ProcessEvent(const SEntityEvent& event)
 	switch (event.event)
 	{
 	case Cry::Entity::EEvent::GameplayStarted: {
+		DeSelect();
 
 	}break;
 	case Cry::Entity::EEvent::Update: {

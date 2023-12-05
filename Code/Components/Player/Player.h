@@ -38,6 +38,11 @@ private:
 	f32 m_movementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;
 	Vec3 m_movementOffset = ZERO;
 
+	//Right click count
+	int32 m_rightClickCount = 0;
+	f32 m_timeBetweenRightClickCountRestart = 0.15f;
+	f32 m_rightClickCountRestartTimePassed = 0.0f;
+
 	//Selections
 	DynArray<IEntity*> m_selectedEntities;
 

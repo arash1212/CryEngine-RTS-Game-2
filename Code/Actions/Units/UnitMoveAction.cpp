@@ -2,12 +2,24 @@
 #include "UnitMoveAction.h"
 #include "GamePlugin.h"
 
-#include "Components/Controller/AIController.h"
+#include <Components/Controller/AIController.h>
+#include <Components/Managers/UnitStateManager.h>
 
-UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition)
+UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunning)
 {
 	this->m_pEntity = entity;
 	this->m_movePosition = movePosition;
+	this->m_isRunning = isRunning;
+
+	this->m_pUnitStateManagerComponent = m_pEntity->GetComponent<CUnitStateManagerComponent>();
+
+	//IsRunning
+	if (m_isRunning) {
+		m_pUnitStateManagerComponent->SetStanceToRun();
+	}
+	else {
+		m_pUnitStateManagerComponent->SetStanceToWalk();
+	}
 }
 
 void UnitMoveAction::Execute()
@@ -15,6 +27,10 @@ void UnitMoveAction::Execute()
 	CAIControllerComponent* pAIControllerComponent = m_pEntity->GetComponent<CAIControllerComponent>();
 	if (!pAIControllerComponent) {
 		CryWarning(EValidatorModule::VALIDATOR_MODULE_GAME, EValidatorSeverity::VALIDATOR_WARNING, "UnitMoveAction : (Execute) AIControllerComponent cannot be null.Action cancelled.");
+		Cancel();
+	}
+	if (!m_pUnitStateManagerComponent) {
+		CryWarning(EValidatorModule::VALIDATOR_MODULE_GAME, EValidatorSeverity::VALIDATOR_WARNING, "UnitMoveAction : (Execute) UnitStateManagerComponent cannot be null.Action cancelled.");
 		Cancel();
 	}
 

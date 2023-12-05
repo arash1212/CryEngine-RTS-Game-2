@@ -1,8 +1,9 @@
 #include "StdAfx.h"
-#include "ActionManager.h"
+#include "UnitStateManager.h"
 #include "GamePlugin.h"
 
 #include <Actions/IBaseAction.h>
+#include <Components/Controller/AIController.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -11,25 +12,26 @@
 
 namespace
 {
-	static void RegisterActionManagerComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterUnitStateManagerComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CActionManagerComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CUnitStateManagerComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterActionManagerComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterUnitStateManagerComponent);
 }
 
 /******************************************************************************************************************************************************************************/
-void CActionManagerComponent::Initialize()
+void CUnitStateManagerComponent::Initialize()
 {
-
+	//IControllerComponent Initialization
+	m_pAIControllerComponent = m_pEntity->GetComponent<CAIControllerComponent>();
 }
 
 /******************************************************************************************************************************************************************************/
-Cry::Entity::EventFlags CActionManagerComponent::GetEventMask() const
+Cry::Entity::EventFlags CUnitStateManagerComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -38,7 +40,7 @@ Cry::Entity::EventFlags CActionManagerComponent::GetEventMask() const
 }
 
 /******************************************************************************************************************************************************************************/
-void CActionManagerComponent::ProcessEvent(const SEntityEvent& event)
+void CUnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -48,11 +50,12 @@ void CActionManagerComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-		this->ProcessActions();
+		UpdateSpeed();
+		UpdateState();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
-		m_actionsQueue.clear();
+
 
 	}break;
 	default:
@@ -61,93 +64,70 @@ void CActionManagerComponent::ProcessEvent(const SEntityEvent& event)
 }
 
 /******************************************************************************************************************************************************************************/
-void CActionManagerComponent::ProcessActions()
+void CUnitStateManagerComponent::UpdateState()
 {
-	if (!m_actionsQueue.empty()) {
-		if (!m_pCurrentAction) {
-			m_pCurrentAction = m_actionsQueue.front();
-			return;
-		}
-		else if (m_pCurrentAction && m_pCurrentAction->IsDone()) {
-			m_actionsQueue.pop_front();
-			m_pCurrentAction = nullptr;
-			return;
-		}
-		else if (m_pCurrentAction && !m_pCurrentAction->IsDone()) {
-			m_pCurrentAction->Execute();
-		}
-	}
-	else {
-		m_pCurrentAction = nullptr;
-	}
-}
-
-/******************************************************************************************************************************************************************************/
-void CActionManagerComponent::AddAction(IBaseAction* action)
-{
-	if (m_pCurrentAction) {
-		m_pCurrentAction->Cancel();
-		m_pCurrentAction = nullptr;
-		m_actionsQueue.clear();
-	}
-	m_actionsQueue.push_back(action);
-}
-
-/******************************************************************************************************************************************************************************/
-void CActionManagerComponent::CancelCurrentAction()
-{
-	if (!m_pCurrentAction) {
+	if (!m_pAIControllerComponent) {
+		m_pAIControllerComponent = m_pEntity->GetComponent<CAIControllerComponent>();
 		return;
 	}
-	m_pCurrentAction->Cancel();
-	//this->m_actionsQueue.clear();
-}
 
-/******************************************************************************************************************************************************************************/
-bool CActionManagerComponent::IsProcessingAnAction()
-{
-	if (!m_pCurrentAction || m_actionsQueue.empty()) {
-		return false;
-	}
-	return true;
-}
+	if (!m_pAIControllerComponent->IsMoving()) {
+		m_pUnitState = EUnitState::IDLE;
 
-/******************************************************************************************************************************************************************************/
-IBaseAction* CActionManagerComponent::GetCurrentAction()
-{
-	return m_pCurrentAction;
-}
-
-/******************************************************************************************************************************************************************************/
-std::deque<IBaseAction*> CActionManagerComponent::GetActionsQueue()
-{
-	return this->m_actionsQueue;
-}
-
-/******************************************************************************************************************************************************************************/
-bool CActionManagerComponent::IsBuilding()
-{
-	return bIsBuilding;
-}
-
-/******************************************************************************************************************************************************************************/
-void CActionManagerComponent::SetIsBuilding(bool isBuilding)
-{
-	this->bIsBuilding = isBuilding;
-}
-
-/******************************************************************************************************************************************************************************/
-int32 CActionManagerComponent::GetActiveActionsCount()
-{
-	int32 count = 0;
-	for (IBaseAction* action : m_actionsQueue) {
-		if (action->IsDone()) {
-			continue;
+		if (m_pUnitStance == EUnitStance::RUNNING) {
+			SetStanceToWalk();
 		}
-		count++;
 	}
+	else if (m_pAIControllerComponent->IsMoving() ) {
+		m_pUnitState = EUnitState::WALKING;
+	}
+}
 
-	return count;
+/******************************************************************************************************************************************************************************/
+void CUnitStateManagerComponent::UpdateSpeed()
+{
+	if (m_pUnitStance == EUnitStance::PRONE) {
+		m_currentSpeed = m_proneSpeed;
+	}
+	else if (m_pUnitStance == EUnitStance::CROUCH) {
+		m_currentSpeed = m_crouchSpeed;
+	}
+	else if (m_pUnitStance == EUnitStance::STANDING) {
+		m_currentSpeed = m_walkSpeed;
+	}
+	else if (m_pUnitStance == EUnitStance::RUNNING) {
+		m_currentSpeed = m_runSpeed;
+	}
+}
+
+/******************************************************************************************************************************************************************************/
+EUnitState CUnitStateManagerComponent::GetState()
+{
+	return this->m_pUnitState;
+}
+
+/******************************************************************************************************************************************************************************/
+EUnitStance CUnitStateManagerComponent::GetStance()
+{
+	return this->m_pUnitStance;
+}
+
+/******************************************************************************************************************************************************************************/
+f32 CUnitStateManagerComponent::GetCurrentSpeed()
+{
+	return this->m_currentSpeed;
+}
+
+/******************************************************************************************************************************************************************************/
+void CUnitStateManagerComponent::SetStanceToRun()
+{
+	this->m_pUnitStance = EUnitStance::RUNNING;
+}
+
+/******************************************************************************************************************************************************************************/
+void CUnitStateManagerComponent::SetStanceToWalk()
+{
+	this->m_pUnitStance = EUnitStance::STANDING;
 }
 
 /******************************************************************************************************************************************************************************/

@@ -4,6 +4,8 @@ class CSelectableComponent;
 class CUnitAnimationComponent;
 class CAIControllerComponent;
 class CActionManagerComponent;
+class CUnitAnimationComponent;
+class CUnitStateManagerComponent;
 
 class CBaseUnitComponent : public IEntityComponent
 {
@@ -27,9 +29,10 @@ public:
 
 private:
 	CSelectableComponent* m_pSelectableComponent = nullptr;
-	CUnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 	CAIControllerComponent* m_pAIControllerComponent = nullptr;
 	CActionManagerComponent* m_pActionManagerComponent = nullptr;
+	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
+	CUnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 
 private:
 };

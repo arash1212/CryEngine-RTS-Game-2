@@ -75,6 +75,13 @@ void CPlayerComponent::ProcessEvent(const SEntityEvent& event)
 
 		Move(fDeltaTime);
 
+		if (m_rightClickCountRestartTimePassed < m_timeBetweenRightClickCountRestart) {
+			m_rightClickCountRestartTimePassed += 0.5f * fDeltaTime;
+		}
+		else {
+			m_rightClickCount = 0;
+		}
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -172,6 +179,10 @@ void CPlayerComponent::CommandPressed(int activationMode, float value)
 {
 	Vec3 mousePos = g_MouseUtils->GetPositionUnderCursor();
 	if (activationMode == eAAM_OnRelease) {
+
+		m_rightClickCount++;
+		m_rightClickCountRestartTimePassed = 0;
+
 		CommandSelectedUnitsToMoveTo(mousePos);
 	}
 }
@@ -218,7 +229,7 @@ void CPlayerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 			continue;
 		}
 
-		pActionManagerComponent->AddAction(new UnitMoveAction(entity, position));
+		pActionManagerComponent->AddAction(new UnitMoveAction(entity, position, m_rightClickCount >= 2));
 	}
 }
 

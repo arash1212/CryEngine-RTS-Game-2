@@ -6,6 +6,8 @@
 #include <Components/Selectables/Selectable.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/ActionManager.h>
+#include <Components/Managers/UnitStateManager.h>
+#include <Components/Units/UnitAnimation.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -31,14 +33,20 @@ void CBaseUnitComponent::Initialize()
 	//SelectableComponent Initialization
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<CSelectableComponent>();
 
-	//UnitAnimationComponent Initialization
-	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<CUnitAnimationComponent>();
-
 	//AIControllerComponent Initialization
 	m_pAIControllerComponent = m_pEntity->GetOrCreateComponent<CAIControllerComponent>();
 
 	//ActionManagerComponent Initialization
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<CActionManagerComponent>();
+
+	//UnitStateManagerComponent Initialization
+	m_pUnitStateManagerComponent = m_pEntity->GetOrCreateComponent<CUnitStateManagerComponent>();
+
+	//UnitAnimationComponent Initialization
+	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<CUnitAnimationComponent>();
+
+	//UnitAnimationComponent Initialization
+	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<CUnitAnimationComponent>();
 }
 
 /******************************************************************************************************************************************************************************/

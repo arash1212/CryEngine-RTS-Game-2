@@ -3,6 +3,7 @@
 #include "GamePlugin.h"
 
 #include <CryAISystem/Components/IEntityNavigationComponent.h>
+#include <Components/Managers/UnitStateManager.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -46,6 +47,10 @@ void CAIControllerComponent::Initialize()
 	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
 	collisionAvoidanceProps.radius = 0.2f;
 	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
+
+	//UnitStateManagerComponen Initialization
+	m_pUnitStateManagerComponent = m_pEntity->GetOrCreateComponent<CUnitStateManagerComponent>();
+
 }
 
 /******************************************************************************************************************************************************************************/
@@ -82,7 +87,7 @@ void CAIControllerComponent::ProcessEvent(const SEntityEvent& event)
 /******************************************************************************************************************************************************************************/
 void CAIControllerComponent::Move()
 {
-	m_pCharacterControllerComponent->SetVelocity(m_pNavigationComponent->GetRequestedVelocity());
+	m_pCharacterControllerComponent->SetVelocity(m_pNavigationComponent->GetRequestedVelocity() * m_pUnitStateManagerComponent->GetCurrentSpeed());
 }
 
 /******************************************************************************************************************************************************************************/
@@ -109,6 +114,18 @@ void CAIControllerComponent::LookAtMovePosition()
 	}
 
 	m_pEntity->SetRotation(Quat::CreateRotationVDir(velocity));
+}
+
+/******************************************************************************************************************************************************************************/
+bool CAIControllerComponent::IsMoving()
+{
+	return m_pCharacterControllerComponent->IsWalking();
+}
+
+/******************************************************************************************************************************************************************************/
+Vec3 CAIControllerComponent::GetVelocity()
+{
+	return m_pCharacterControllerComponent->GetVelocity();
 }
 
 /******************************************************************************************************************************************************************************/
