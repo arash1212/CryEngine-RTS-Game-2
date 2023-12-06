@@ -3,6 +3,7 @@
 #include "GamePlugin.h"
 
 #include <CryEntitySystem/IEntitySystem.h>
+#include <CryGame/IGameFramework.h>
 
 IEntity* EntityUtils::SpawnEntity(Vec3 position, Quat rotation)
 {

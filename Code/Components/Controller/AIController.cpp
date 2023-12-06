@@ -39,13 +39,13 @@ void CAIControllerComponent::Initialize()
 	m_movementProps.minSpeed = 3.5;
 	m_movementProps.maxSpeed = 5;
 	m_movementProps.lookAheadDistance = 0.1f;
-	m_movementProps.maxDeceleration = 12;
+	m_movementProps.maxDeceleration = 1200;
 	m_movementProps.bStopAtEnd = true;
 	m_pNavigationComponent->SetMovementProperties(m_movementProps);
 
 	//Collision avoidance
 	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
-	collisionAvoidanceProps.radius = 0.2f;
+	collisionAvoidanceProps.radius = 0.01f;
 	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
 
 	//UnitStateManagerComponen Initialization
@@ -120,6 +120,13 @@ void CAIControllerComponent::LookAtMovePosition()
 void CAIControllerComponent::StopMoving()
 {
 	this->m_pNavigationComponent->NavigateTo(m_pEntity->GetWorldPos());
+}
+
+/******************************************************************************************************************************************************************************/
+void CAIControllerComponent::LookAt(Vec3 position)
+{
+	Vec3 dir = position - m_pEntity->GetWorldPos();
+	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir));
 }
 
 /******************************************************************************************************************************************************************************/

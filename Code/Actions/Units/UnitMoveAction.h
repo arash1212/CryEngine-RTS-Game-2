@@ -8,7 +8,7 @@ class CAIControllerComponent;
 class UnitMoveAction : public IBaseAction{
 
 public:
-	UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunning);
+	UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunning, bool isCover);
 	~UnitMoveAction() = default;
 
 protected:
@@ -18,6 +18,7 @@ protected:
 
 	bool m_isDone = false;
 	bool m_isRunning = false;
+	bool m_isCover = false;
 	bool m_navigationRequestDone = false;
 
 	Vec3 m_movePosition = ZERO;

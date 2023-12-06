@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "GamePlugin.h"
 
+#include <Utils/CoverUtils.h>
+#include <Utils/EntityUtils.h>
 #include <Utils/MouseUtils.h>
 #include <Components/UI/BoxSelectionUI.h>
 #include <Components/UI/InGameUI.h>
@@ -17,8 +19,6 @@
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
 #include <CryCore/StaticInstanceList.h>
-
-#define MOUSE_DELTA_TRESHOLD 0.0001f
 
 namespace
 {
@@ -89,6 +89,8 @@ void CPlayerComponent::ProcessEvent(const SEntityEvent& event)
 		else {
 			m_rightClickCount = 0;
 		}
+
+		g_CoverUtils->FindCoverPointsAroundPosition(g_MouseUtils->GetPositionUnderCursor(), 2, m_selectedEntities.size());
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -181,6 +183,8 @@ void CPlayerComponent::SelectionPressed(int activationMode, float value)
 	if (activationMode == eAAM_OnRelease) {
 		m_selectedEntities = m_pBoxSelectionUIComponent->GetEntitiesInsideSelectionBox(mouseScreenPos);
 
+		CryLog("size added : %i", m_selectedEntities.size());
+
 		SelectSelectables();
 	}
 }
@@ -211,7 +215,6 @@ void CPlayerComponent::SelectSelectables()
 		}
 
 		pSelectableComponent->Select();
-		m_selectedEntities.append(entity);
 	}
 
 	UpdateActionbarItems();
@@ -241,13 +244,21 @@ void CPlayerComponent::DeSelectSelectables()
 
 void CPlayerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 {
-	for (IEntity* entity : m_selectedEntities) {
-		CActionManagerComponent* pActionManagerComponent = entity->GetComponent<CActionManagerComponent>();
+	CryLog("size units : %i", m_selectedEntities.size());
+	DynArray<Vec3> coverPoints = g_CoverUtils->FindCoverPointsAroundPosition(position, 2, m_selectedEntities.size());
+
+	for (int32 i = 0; i < m_selectedEntities.size(); i++) {
+		CActionManagerComponent* pActionManagerComponent = m_selectedEntities[i]->GetComponent<CActionManagerComponent>();
 		if (!pActionManagerComponent) {
 			continue;
 		}
 
-		pActionManagerComponent->AddAction(new UnitMoveAction(entity, position, m_rightClickCount >= 2));
+		if (coverPoints.size() > i) {
+			pActionManagerComponent->AddAction(new UnitMoveAction(m_selectedEntities[i], coverPoints[i], m_rightClickCount >= 2, true));
+		}
+		else {
+			pActionManagerComponent->AddAction(new UnitMoveAction(m_selectedEntities[i], position, m_rightClickCount >= 2, false));
+		}
 	}
 }
 
@@ -263,7 +274,7 @@ void CPlayerComponent::UpdateActionbarItems()
 		m_currentUIItems = pUIItemProviderComponent->GetGeneralUIItems();
 	}
 	else if (m_selectedEntities.size() == 1) {
-		m_currentUIItems = pUIItemProviderComponent->GetUniqueUIItems();
+		m_currentUIItems = pUIItemProviderComponent->GetAllUIItems();
 	}
 
 	for (IBaseUIItem* item : m_currentUIItems) {
@@ -275,7 +286,15 @@ void CPlayerComponent::UpdateActionbarItems()
 void CPlayerComponent::ExecuteActionbarItem(int32 index)
 {
 	CryLog("action bar index : %i", index);
-	m_currentUIItems[index]->Execute();
+	for (IEntity* entity : m_selectedEntities) {
+		CUIItemProviderComponent* pUIItemProviderComponent = entity->GetComponent<CUIItemProviderComponent>();
+		if (m_selectedEntities.size() > 1) {
+			pUIItemProviderComponent->GetGeneralUIItems()[index]->Execute();
+		}
+		else if (m_selectedEntities.size() == 1) {
+			pUIItemProviderComponent->GetAllUIItems()[index]->Execute();
+		}
+	}
 }
 
 /******************************************************************************************************************************************************************************/

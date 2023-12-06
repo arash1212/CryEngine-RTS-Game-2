@@ -118,6 +118,7 @@ DynArray<IEntity*> CBoxSelectionUIComponent::GetEntitiesInsideSelectionBox(Vec2 
 		gEnv->pSystem->GetViewCamera().Project(Vec3(aabb.min.x + entityWidth, aabb.min.y + entityHeight, aabb.min.z), p8);
 		gEnv->pSystem->GetViewCamera().Project(Vec3(aabb.max.x - entityWidth, aabb.max.y - entityHeight, aabb.max.z), p9);
 
+		/*
 		pd->AddSphere(aabb.min, 0.1f, ColorF(0, 1, 0), 5);
 		pd->AddSphere(aabb.max, 0.1f, ColorF(0, 1, 0), 5);
 		pd->AddSphere(aabb.GetCenter(), 0.1f, ColorF(0, 1, 0), 5);
@@ -127,6 +128,7 @@ DynArray<IEntity*> CBoxSelectionUIComponent::GetEntitiesInsideSelectionBox(Vec2 
 		pd->AddSphere(Vec3(aabb.max.x, aabb.max.y - entityHeight, aabb.max.z), 0.1f, ColorF(0, 0, 1), 5);
 		pd->AddSphere(Vec3(aabb.min.x + entityWidth, aabb.min.y + entityHeight, aabb.min.z), 0.1f, ColorF(0, 0, 1), 5);
 		pd->AddSphere(Vec3(aabb.max.x - entityWidth, aabb.max.y - entityHeight, aabb.max.z), 0.1f, ColorF(0, 0, 1), 5);
+		*/
 
 		f32 minX = m_boxStartPos.x < boxCurrentPos.x ? m_boxStartPos.x : boxCurrentPos.x;
 		f32 maxX = minX + width;

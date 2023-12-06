@@ -119,8 +119,10 @@ add_sources("Actionbar_uber.cpp"
 add_sources("Utils_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Utils"
+		"Utils/CoverUtils.cpp"
 		"Utils/EntityUtils.cpp"
 		"Utils/MouseUtils.cpp"
+		"Utils/CoverUtils.h"
 		"Utils/EntityUtils.h"
 		"Utils/MouseUtils.h"
 )

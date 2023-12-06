@@ -38,6 +38,7 @@ public:
 	void MoveTo(Vec3 position);
 	void LookAtMovePosition();
 	void StopMoving();
+	void LookAt(Vec3 position);
 
 	bool IsMoving();
 	Vec3 GetVelocity();

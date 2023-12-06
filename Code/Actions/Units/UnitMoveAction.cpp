@@ -5,11 +5,12 @@
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
 
-UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunning)
+UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunning, bool isCover)
 {
 	this->m_pEntity = entity;
 	this->m_movePosition = movePosition;
 	this->m_isRunning = isRunning;
+	this->m_isCover = isCover;
 
 	this->m_pUnitStateManagerComponent = m_pEntity->GetComponent<CUnitStateManagerComponent>();
 	this->pAIControllerComponent = m_pEntity->GetComponent<CAIControllerComponent>();
@@ -35,7 +36,11 @@ void UnitMoveAction::Execute()
 	}
 
 	f32 distanceToPosition = m_pEntity->GetWorldPos().GetDistance(m_movePosition);
-	if (distanceToPosition <= 1) {
+	if (distanceToPosition <= 0.1f) {
+		if (m_isCover) {
+			this->pAIControllerComponent->LookAt(m_movePosition);
+		}
+
 		m_isDone = true;
 		return;
 	}

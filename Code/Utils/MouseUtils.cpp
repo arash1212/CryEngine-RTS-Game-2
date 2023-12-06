@@ -26,7 +26,7 @@ Vec3 MouseUtils::GetPositionUnderCursor()
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 	if (gEnv->pPhysicalWorld->RayWorldIntersection(p1, dir * gEnv->p3DEngine->GetMaxViewDistance(), ent_all, flags, &hit, 1)) {
 		pd->Begin("MouseUtils_GetPositionUnderCursor_Debug", true);
-		pd->AddSphere(hit.pt, 0.5f, ColorF(0, 1, 0), 0.5f);
+		pd->AddSphere(hit.pt, 0.1f, ColorF(0, 1, 0), 0.5f);
 		return hit.pt;
 	}
 	return ZERO;
