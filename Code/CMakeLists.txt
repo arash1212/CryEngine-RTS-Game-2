@@ -43,6 +43,14 @@ add_sources("Controller_uber.cpp"
 		"Components/Controller/AIController.cpp"
 		"Components/Controller/AIController.h"
 )
+add_sources("Cover_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Cover"
+		"Components/Cover/CoverPosition.cpp"
+		"Components/Cover/EntityCoverUser.cpp"
+		"Components/Cover/CoverPosition.h"
+		"Components/Cover/EntityCoverUser.h"
+)
 add_sources("Managers_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Managers"
@@ -121,10 +129,14 @@ add_sources("Utils_uber.cpp"
     SOURCE_GROUP "Utils"
 		"Utils/CoverUtils.cpp"
 		"Utils/EntityUtils.cpp"
+		"Utils/MathUtils.cpp"
 		"Utils/MouseUtils.cpp"
+		"Utils/PhysicsUtils.cpp"
 		"Utils/CoverUtils.h"
 		"Utils/EntityUtils.h"
+		"Utils/MathUtils.h"
 		"Utils/MouseUtils.h"
+		"Utils/PhysicsUtils.h"
 )
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/CVarOverrides.h")

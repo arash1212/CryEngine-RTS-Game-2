@@ -7,6 +7,7 @@ class CActionManagerComponent;
 class CUnitAnimationComponent;
 class CUnitStateManagerComponent;
 class CUIItemProviderComponent;
+class CEntityCoverUserComponent;
 
 class CBaseUnitComponent : public IEntityComponent
 {
@@ -35,6 +36,7 @@ private:
 	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
 	CUnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 	CUIItemProviderComponent* m_pUIItemProviderComponent = nullptr;
+	CEntityCoverUserComponent* m_pEntityCoverUserComponent = nullptr;
 
 private:
 };

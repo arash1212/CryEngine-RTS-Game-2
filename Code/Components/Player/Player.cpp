@@ -14,6 +14,8 @@
 #include <UIItems/IBaseUIItem.h>
 #include <Components/Selectables/UIItemProvider.h>
 #include <Listeners/UIElementEventListener.h>
+#include <Components/Cover/EntityCoverUser.h>
+#include <Components/Cover/CoverPosition.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -245,19 +247,20 @@ void CPlayerComponent::DeSelectSelectables()
 void CPlayerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 {
 	CryLog("size units : %i", m_selectedEntities.size());
-	DynArray<Vec3> coverPoints = g_CoverUtils->FindCoverPointsAroundPosition(position, 2, m_selectedEntities.size());
+	DynArray<CCoverPosition*> coverPoints = g_CoverUtils->FindCoverPointsAroundPosition(position, 2, m_selectedEntities.size());
 
 	for (int32 i = 0; i < m_selectedEntities.size(); i++) {
-		CActionManagerComponent* pActionManagerComponent = m_selectedEntities[i]->GetComponent<CActionManagerComponent>();
+		IEntity* pEntity = m_selectedEntities[i];
+		CActionManagerComponent* pActionManagerComponent = pEntity->GetComponent<CActionManagerComponent>();
 		if (!pActionManagerComponent) {
 			continue;
 		}
 
 		if (coverPoints.size() > i) {
-			pActionManagerComponent->AddAction(new UnitMoveAction(m_selectedEntities[i], coverPoints[i], m_rightClickCount >= 2, true));
+			pActionManagerComponent->AddAction(new UnitMoveAction(pEntity, coverPoints[i]->GetCoverPosition(), m_rightClickCount >= 2, coverPoints[i]));
 		}
 		else {
-			pActionManagerComponent->AddAction(new UnitMoveAction(m_selectedEntities[i], position, m_rightClickCount >= 2, false));
+			pActionManagerComponent->AddAction(new UnitMoveAction(pEntity, position, m_rightClickCount >= 2, nullptr));
 		}
 	}
 }

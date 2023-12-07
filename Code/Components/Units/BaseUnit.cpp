@@ -9,6 +9,7 @@
 #include <Components/Managers/UnitStateManager.h>
 #include <Components/Units/UnitAnimation.h>
 #include <Components/Selectables/UIItemProvider.h>
+#include <Components/Cover/EntityCoverUser.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -51,6 +52,9 @@ void CBaseUnitComponent::Initialize()
 
 	//UIItemProviderComponent Initialization
 	m_pUIItemProviderComponent = m_pEntity->GetOrCreateComponent<CUIItemProviderComponent>();
+
+	//EntityCoverUserComponent Initialization
+	m_pEntityCoverUserComponent = m_pEntity->GetOrCreateComponent<CEntityCoverUserComponent>();
 }
 
 /******************************************************************************************************************************************************************************/

@@ -4,21 +4,25 @@
 
 class CUnitStateManagerComponent;
 class CAIControllerComponent;
+class CEntityCoverUserComponent;
+class CCoverPosition;
 
 class UnitMoveAction : public IBaseAction{
 
 public:
-	UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunning, bool isCover);
+	UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunning, CCoverPosition* coverPosition);
 	~UnitMoveAction() = default;
 
 protected:
 	IEntity* m_pEntity = nullptr;
 	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
 	CAIControllerComponent* pAIControllerComponent = nullptr;
+	CEntityCoverUserComponent* m_pEntityCoverUserComponent = nullptr;
+
+	CCoverPosition* m_pCoverPosition = nullptr;
 
 	bool m_isDone = false;
 	bool m_isRunning = false;
-	bool m_isCover = false;
 	bool m_navigationRequestDone = false;
 
 	Vec3 m_movePosition = ZERO;

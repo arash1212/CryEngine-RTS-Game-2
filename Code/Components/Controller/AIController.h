@@ -5,6 +5,7 @@
 struct IEntityNavigationComponent;
 
 class CUnitStateManagerComponent;
+class CEntityCoverUserComponent;
 
 class CAIControllerComponent final : public IEntityComponent
 {
@@ -31,6 +32,7 @@ private:
 	Cry::DefaultComponents::CCharacterControllerComponent* m_pCharacterControllerComponent = nullptr;
 	IEntityNavigationComponent* m_pNavigationComponent = nullptr;
 	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
+	CEntityCoverUserComponent* m_pEntityCoverUserComponent = nullptr;
 
 private:
 	void Move();
