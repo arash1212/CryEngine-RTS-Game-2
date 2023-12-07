@@ -2,6 +2,7 @@
 #include "EntityCoverUser.h"
 #include "GamePlugin.h"
 
+#include <Utils/EntityUtils.h>
 #include <Utils/PhysicsUtils.h>
 #include <Components/Controller/AIController.h>
 #include <CryAISystem/ICoverSystem.h>
@@ -57,6 +58,7 @@ void CEntityCoverUserComponent::ProcessEvent(const SEntityEvent& event)
 	}break;
 	case Cry::Entity::EEvent::Update: {
 
+		//TODO : CLEAN
 		if (m_pCurrentCoverPosition) {
 			if (!IsInCover()) {
 				MoveToCover();
@@ -67,9 +69,7 @@ void CEntityCoverUserComponent::ProcessEvent(const SEntityEvent& event)
 					m_pUnitStateManagerComponent->SetStance(EUnitStance::CROUCH);
 				}
 				Vec3 normal = GetCurrentCoverNormal();
-				if (normal != ZERO) {
-					m_pAIControllerComponent->LookAt(normal);
-				}
+				m_pAIControllerComponent->LookAt(normal);
 			}
 		}
 	}break;
@@ -102,6 +102,7 @@ bool CEntityCoverUserComponent::IsMovingToCover() const
 /******************************************************************************************************************************************************************************/
 bool CEntityCoverUserComponent::IsCoverCompromised() const
 {
+	//TODO
 	return false;
 }
 
@@ -121,7 +122,7 @@ CCoverPosition* CEntityCoverUserComponent::GetCurrentCoverPosition() const
 /******************************************************************************************************************************************************************************/
 Vec3 CEntityCoverUserComponent::GetCurrentCoverNormal() const
 {
-	return  m_pCurrentCoverPosition ? g_PhysicsUtils->RaycastGetHitNormal(m_pEntity->GetWorldPos(), m_pCurrentCoverPosition->GetCoverObject()->GetWorldPos()) : ZERO;
+	return  m_pCurrentCoverPosition ? g_EntityUtils->GetClosetPointOnMeshBorder(m_pCurrentCoverPosition->GetCoverPosition(), m_pCurrentCoverPosition->GetCoverObject()) : ZERO;
 }
 
 /******************************************************************************************************************************************************************************/
