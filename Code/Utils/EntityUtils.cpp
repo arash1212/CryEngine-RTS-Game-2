@@ -71,3 +71,21 @@ IEntity* EntityUtils::GetClosestEntity(DynArray<IEntity*> entities, Vec3 to)
 	}
 	return result;
 }
+
+f32 EntityUtils::GetDistance(Vec3 from, Vec3 to, IEntity* toEntity)
+{
+	if (toEntity) {
+		AABB aabb;
+		toEntity->GetWorldBounds(aabb);
+		Vec3 pos = GetClosetPointOnMeshBorder(from, toEntity);
+		return from.GetDistance(pos);
+	}
+	else {
+		return from.GetDistance(to);
+	}
+}
+
+f32 EntityUtils::GetDistance(Vec3 from, Vec3 to)
+{
+	return from.GetDistance(to);
+}

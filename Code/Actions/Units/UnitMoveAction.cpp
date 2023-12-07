@@ -2,6 +2,8 @@
 #include "UnitMoveAction.h"
 #include "GamePlugin.h"
 
+#include <Utils/EntityUtils.h>
+
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
 #include <Components/Cover/CoverPosition.h>
@@ -40,7 +42,7 @@ void UnitMoveAction::Execute()
 		Cancel();
 	}
 
-	f32 distanceToPosition = m_pEntity->GetWorldPos().GetDistance(m_movePosition);
+	f32 distanceToPosition = g_EntityUtils->GetDistance(m_pEntity->GetWorldPos(), m_movePosition);
 	if (distanceToPosition <= 0.1f) {
 		m_isDone = true;
 		return;

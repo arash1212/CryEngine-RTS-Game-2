@@ -90,7 +90,7 @@ void CEntityCoverUserComponent::MoveToCover()
 /******************************************************************************************************************************************************************************/
 bool CEntityCoverUserComponent::IsInCover() const
 {
-	return m_pCurrentCoverPosition && m_pCurrentCoverPosition->GetCoverPosition().GetDistance(m_pEntity->GetWorldPos()) < 0.3f;
+	return m_pCurrentCoverPosition&& g_EntityUtils->GetDistance(m_pCurrentCoverPosition->GetCoverPosition(), m_pEntity->GetWorldPos()) < 0.3f;
 }
 
 /******************************************************************************************************************************************************************************/
