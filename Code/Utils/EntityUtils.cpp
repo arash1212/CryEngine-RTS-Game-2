@@ -2,15 +2,27 @@
 #include "EntityUtils.h"
 #include "GamePlugin.h"
 
+#include <Components/Selectables/OwnerInfo.h>
+#include <Components/Player/Player.h>
+
 #include <CryEntitySystem/IEntitySystem.h>
 #include <CryGame/IGameFramework.h>
 
-IEntity* EntityUtils::SpawnEntity(Vec3 position, Quat rotation)
+IEntity* EntityUtils::SpawnEntity(Vec3 position, Quat rotation, IEntity* ownerEntity)
 {
 	SEntitySpawnParams pEntitySpawnParams;
 	pEntitySpawnParams.vPosition = position;
 	pEntitySpawnParams.qRotation = rotation;
 	IEntity* pSpawnedEntity = gEnv->pEntitySystem->SpawnEntity(pEntitySpawnParams, true);
+
+	if (ownerEntity) {
+		COwnerInfoComponent* pOwnerInfoComponent = pSpawnedEntity->GetComponent<COwnerInfoComponent>();
+		if (pOwnerInfoComponent) {
+			COwnerInfoComponent* pOtherOwnerInfoComponent = pSpawnedEntity->GetComponent<COwnerInfoComponent>();
+			pOwnerInfoComponent->SetOwnerInfo(pOtherOwnerInfoComponent->GetOwnerInfo());
+		}
+	}
+
 	CryLog("EntityUtils : (SpawnEntity) New Entity Spawned");
 	return pSpawnedEntity;
 }
@@ -88,4 +100,25 @@ f32 EntityUtils::GetDistance(Vec3 from, Vec3 to, IEntity* toEntity)
 f32 EntityUtils::GetDistance(Vec3 from, Vec3 to)
 {
 	return from.GetDistance(to);
+}
+
+DynArray<IEntity*> EntityUtils::FindHostilePlayers(IEntity* toEntity)
+{
+	DynArray<IEntity*> hostiles;
+	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
+	entityItPtr->MoveFirst();
+	while (!entityItPtr->IsEnd())
+	{
+		IEntity* pEntity = entityItPtr->Next();
+		if (!pEntity) {
+			continue;
+		}
+		CPlayerComponent* pPlayerComponent = pEntity->GetComponent<CPlayerComponent>();
+		if (!pPlayerComponent) {
+			continue;
+		}
+		hostiles.append(pEntity);
+	}
+
+	return hostiles;
 }

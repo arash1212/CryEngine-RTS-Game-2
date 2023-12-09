@@ -135,6 +135,12 @@ void CAIControllerComponent::LookAt(Vec3 position)
 }
 
 /******************************************************************************************************************************************************************************/
+bool CAIControllerComponent::IsDestinationReachable(Vec3 destination)
+{
+	return m_pNavigationComponent->IsDestinationReachable(destination);
+}
+
+/******************************************************************************************************************************************************************************/
 bool CAIControllerComponent::IsMoving()
 {
 	return m_pCharacterControllerComponent->IsWalking();

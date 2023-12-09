@@ -41,6 +41,7 @@ public:
 	void LookAtMovePosition();
 	void StopMoving();
 	void LookAt(Vec3 position);
+	bool IsDestinationReachable(Vec3 destination);
 
 	bool IsMoving();
 	Vec3 GetVelocity();

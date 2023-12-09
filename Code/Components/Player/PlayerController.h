@@ -7,6 +7,7 @@ class CInGameUIComponent;
 class IBaseUIItem;
 class UIElementEventListener;
 class CPlayerComponent;
+class COwnerInfoComponent;
 
 static constexpr f32 PLAYER_DEFAULT_MOVEMENT_SPEED = 10.f;
 
@@ -38,6 +39,7 @@ protected:
 	CInGameUIComponent* m_pInGameUIComponent = nullptr;
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
 	CPlayerComponent* m_pPlayerComponent = nullptr;
+	COwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 private:
 	f32 m_movementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;

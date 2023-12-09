@@ -62,7 +62,9 @@ add_sources("Managers_uber.cpp"
 add_sources("Player_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Player"
+		"Components/Player/Player.cpp"
 		"Components/Player/PlayerController.cpp"
+		"Components/Player/Player.h"
 		"Components/Player/PlayerController.h"
 )
 add_sources("Selectables_uber.cpp"
@@ -92,8 +94,10 @@ add_sources("UI_uber.cpp"
 add_sources("Units_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Units"
+		"Components/Units/Attacker.cpp"
 		"Components/Units/BaseUnit.cpp"
 		"Components/Units/UnitAnimation.cpp"
+		"Components/Units/Attacker.h"
 		"Components/Units/BaseUnit.h"
 		"Components/Units/UnitAnimation.h"
 )

@@ -53,6 +53,20 @@ void CSoldier1UnitComponent::Initialize()
 	//BaseWeaponComponent Initialization
 	m_pBaseWeaponComponent = m_pEntity->GetOrCreateComponent<CBaseWeaponComponent>();
 	m_pBaseWeaponComponent->Draw();
+
+
+	//AttackerComponent Initialization
+	m_pAttackerComponent = m_pEntity->GetComponent<CAttackerComponent>();
+	m_pAttackerComponent->SetDamageAmount(2.f);
+	//Attack Info
+	SUnitAttackInfo pAttckInfo;
+	pAttckInfo.m_pAttackType = EAttackType::RANGED;
+	pAttckInfo.bIsHumanoid = true;
+	pAttckInfo.bIsFollower = false;
+	pAttckInfo.m_maxAttackDistance = 25.f;
+	pAttckInfo.m_maxAttackCount = 7;
+	pAttckInfo.m_timeBetweenAttacks = 0.04f;
+	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 }
 
 /******************************************************************************************************************************************************************************/

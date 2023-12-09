@@ -4,6 +4,7 @@
 
 #include <CryAISystem/Components/IEntityNavigationComponent.h>
 #include <Components/Managers/UnitStateManager.h>
+#include <Components/Controller/AIController.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -127,6 +128,11 @@ void CUnitAnimationComponent::UpdateAnimations()
 		m_activeFragmentId = currentFragmentId;
 		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
 	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CUnitAnimationComponent::PlayRandomAttackAnimation()
+{
 }
 
 /******************************************************************************************************************************************************************************/

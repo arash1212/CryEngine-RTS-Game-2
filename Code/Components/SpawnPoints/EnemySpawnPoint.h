@@ -2,11 +2,11 @@
 
 class COwnerInfoComponent;
 
-class CPlayerSpawnPointComponent final : public IEntityComponent
+class CEnemySpawnPointComponent final : public IEntityComponent
 {
 public:
-	CPlayerSpawnPointComponent() = default;
-	virtual ~CPlayerSpawnPointComponent() = default;
+	CEnemySpawnPointComponent() = default;
+	virtual ~CEnemySpawnPointComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -15,11 +15,11 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<CPlayerSpawnPointComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<CEnemySpawnPointComponent>& desc)
 	{
-		desc.SetGUID("{847739A6-3F19-462E-BEFE-40EF7B08E95F}"_cry_guid);
+		desc.SetGUID("{71ABE7BC-0F97-4DB4-8083-FB0F49C73A8C}"_cry_guid);
 		desc.SetEditorCategory("SpawnPoints");
-		desc.SetDescription("Player Spawn Point Component");
+		desc.SetDescription("Enemy Spawn Point Component");
 	}
 
 private:
@@ -29,4 +29,5 @@ private:
 	void SpawnPlayer();
 
 	void SpawnUnits(IEntity* ownerPlayer);
+
 };

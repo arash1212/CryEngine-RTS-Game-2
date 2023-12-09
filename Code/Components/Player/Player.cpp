@@ -3,6 +3,7 @@
 #include "GamePlugin.h"
 
 #include <Actions/IBaseAction.h>
+#include <Components/Selectables/OwnerInfo.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -25,7 +26,9 @@ namespace
 /******************************************************************************************************************************************************************************/
 void CPlayerComponent::Initialize()
 {
-
+	//OwnerInfoComponent Initialization
+	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<COwnerInfoComponent>();
+	m_pOwnerInfoComponent->SetCanBeTarget(false);
 }
 
 /******************************************************************************************************************************************************************************/
@@ -87,6 +90,12 @@ void CPlayerComponent::RemoveOwnedEntity(IEntity* entity)
 	}
 
 	m_ownedEntities = result;
+}
+
+/******************************************************************************************************************************************************************************/
+DynArray<IEntity*> CPlayerComponent::GetOwnedEntities()
+{
+	return m_ownedEntities;
 }
 
 /******************************************************************************************************************************************************************************/

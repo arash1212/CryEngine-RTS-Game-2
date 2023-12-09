@@ -5,6 +5,7 @@
 
 class CUIItemProviderComponent;
 class CBaseWeaponComponent;
+class CAttackerComponent;
 
 class CSoldier1UnitComponent final : public CBaseUnitComponent
 {
@@ -32,6 +33,7 @@ private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	CUIItemProviderComponent* m_pUIItemProviderComponent = nullptr;
 	CBaseWeaponComponent* m_pBaseWeaponComponent = nullptr;
+	CAttackerComponent* m_pAttackerComponent = nullptr;
 
 private:
 };

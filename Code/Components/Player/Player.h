@@ -1,5 +1,7 @@
 #pragma once
 
+class COwnerInfoComponent;
+
 class CPlayerComponent : public IEntityComponent {
 
 public:
@@ -20,6 +22,9 @@ public:
 	}
 
 private:
+	COwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+
+private:
 	bool m_isAI = true;
 	DynArray<IEntity*> m_ownedEntities;
 
@@ -29,4 +34,6 @@ public:
 
 	void AddOwnedEntity(IEntity* entity);
 	void RemoveOwnedEntity(IEntity* entity);
+
+	DynArray<IEntity*> GetOwnedEntities();
 };

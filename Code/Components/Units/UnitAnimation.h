@@ -45,4 +45,7 @@ private:
 
 private:
 	void UpdateAnimations();
+
+public:
+	void PlayRandomAttackAnimation();
 };

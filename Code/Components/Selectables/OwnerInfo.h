@@ -1,5 +1,7 @@
 #pragma once
 
+class CPlayerComponent;
+
 enum class EPlayer {
 	PLAYER1,
 	PLAYER2,
@@ -27,6 +29,7 @@ struct SOwnerInfo {
 	EPlayer m_pPlayer;
 	EPlayerTeam m_pPlayerTeam;
 	EPlayerFaction m_pPlayerFaction;
+	CPlayerComponent* m_pPlayerComponent;
 };
 
 class COwnerInfoComponent final : public IEntityComponent
@@ -44,15 +47,20 @@ public:
 	// Reflect type to set a unique identifier for this component
 	static void ReflectType(Schematyc::CTypeDesc<COwnerInfoComponent>& desc)
 	{
-		desc.SetGUID("{690409F9-3667-4093-A67A-FD79438693D7}"_cry_guid);
+		desc.SetGUID("{0E64A5A0-5E6D-485D-84DE-5C2C37644D35}"_cry_guid);
 		desc.SetEditorCategory("Selectables");
 		desc.SetDescription("Owner Info Component");
 	}
 
+
 private:
 	SOwnerInfo m_pOwnerInfo;
+	bool m_canBeTarget = true;
 
 public:
 	SOwnerInfo GetOwnerInfo();
 	void SetOwnerInfo(SOwnerInfo ownerInfo);
+	
+	void SetCanBeTarget(bool canBeTarget);
+	bool CanBeTarget();
 };

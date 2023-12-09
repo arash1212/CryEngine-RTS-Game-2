@@ -11,6 +11,7 @@
 #include <Components/Selectables/UIItemProvider.h>
 #include <Components/Cover/EntityCoverUser.h>
 #include <Components/Selectables/OwnerInfo.h>
+#include <Components/Units/Attacker.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -59,6 +60,9 @@ void CBaseUnitComponent::Initialize()
 
 	//OwnerInfoComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<COwnerInfoComponent>();
+
+	//AttackerComponent Initialization
+	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<CAttackerComponent>();
 }
 
 /******************************************************************************************************************************************************************************/
