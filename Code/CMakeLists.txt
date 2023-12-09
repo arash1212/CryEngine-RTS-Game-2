@@ -101,6 +101,12 @@ add_sources("Units_uber.cpp"
 		"Components/Units/Units/Soldier1Unit.cpp"
 		"Components/Units/Units/Soldier1Unit.h"
 )
+add_sources("Weapons_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Weapons"
+		"Components/Weapons/BaseWeapon.cpp"
+		"Components/Weapons/BaseWeapon.h"
+)
 add_sources("Listeners_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Listeners"

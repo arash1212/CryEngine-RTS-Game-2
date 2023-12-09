@@ -2,6 +2,7 @@
 #include "Soldier1Unit.h"
 #include "GamePlugin.h"
 
+#include <Components/Weapons/BaseWeapon.h>
 #include <Components/Units/UnitAnimation.h>
 #include <Components/Units/BaseUnit.h>
 #include <CryAISystem/Components/IEntityNavigationComponent.h>
@@ -48,6 +49,10 @@ void CSoldier1UnitComponent::Initialize()
 	m_pUIItemProviderComponent = m_pEntity->GetComponent<CUIItemProviderComponent>();
 	m_pUIItemProviderComponent->AddGeneralUIItem(new CancelUIItem(m_pEntity));
 	m_pUIItemProviderComponent->AddGeneralUIItem(new ChangeStanceUIItem(m_pEntity));
+
+	//BaseWeaponComponent Initialization
+	m_pBaseWeaponComponent = m_pEntity->GetOrCreateComponent<CBaseWeaponComponent>();
+	m_pBaseWeaponComponent->Draw();
 }
 
 /******************************************************************************************************************************************************************************/

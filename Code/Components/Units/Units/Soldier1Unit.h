@@ -4,6 +4,7 @@
 #include <Components/Units/BaseUnit.h>
 
 class CUIItemProviderComponent;
+class CBaseWeaponComponent;
 
 class CSoldier1UnitComponent final : public CBaseUnitComponent
 {
@@ -30,6 +31,7 @@ public:
 private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	CUIItemProviderComponent* m_pUIItemProviderComponent = nullptr;
+	CBaseWeaponComponent* m_pBaseWeaponComponent = nullptr;
 
 private:
 };

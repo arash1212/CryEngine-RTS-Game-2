@@ -29,6 +29,9 @@ void CSelectableComponent::Initialize()
 	m_pDecalComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CDecalComponent>();
 	m_pDecalComponent->SetMaterialFileName("decals/selectable/selectable_decal_mat.mtl");
 	m_pDecalComponent->SetDepth(5.f);
+
+	//RenderNode Initialization
+	m_pRenderNode = m_pEntity->GetRenderNode();
 }
 
 /******************************************************************************************************************************************************************************/
@@ -66,12 +69,42 @@ void CSelectableComponent::ProcessEvent(const SEntityEvent& event)
 void CSelectableComponent::Select()
 {
 	m_pDecalComponent->Spawn();
+	HighLightGreen();
 }
 
 /******************************************************************************************************************************************************************************/
 void CSelectableComponent::DeSelect()
 {
 	m_pDecalComponent->Remove();
+	HighLightBlack();
 }
 
 /******************************************************************************************************************************************************************************/
+void CSelectableComponent::HighLightGreen()
+{
+	if (!m_pRenderNode) {
+		m_pRenderNode = m_pEntity->GetRenderNode();
+		return;
+	}
+	m_pRenderNode->m_nHUDSilhouettesParam = m_greenColor;
+}
+
+/******************************************************************************************************************************************************************************/
+void CSelectableComponent::HighLightRed()
+{
+	if (!m_pRenderNode) {
+		m_pRenderNode = m_pEntity->GetRenderNode();
+		return;
+	}
+	m_pRenderNode->m_nHUDSilhouettesParam = m_redColor;
+}
+
+/******************************************************************************************************************************************************************************/
+void CSelectableComponent::HighLightBlack()
+{
+	if (!m_pRenderNode) {
+		m_pRenderNode = m_pEntity->GetRenderNode();
+		return;
+	}
+	m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;
+}
