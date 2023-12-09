@@ -3,7 +3,6 @@
 #include "GamePlugin.h"
 
 #include <Utils/EntityUtils.h>
-#include <Components/Player/PlayerController.h>
 #include <Components/Player/Player.h>
 #include <Components/Selectables/OwnerInfo.h>
 #include <Components/Units/Units/Soldier1Unit.h>
@@ -64,10 +63,10 @@ void CEnemySpawnPointComponent::SpawnPlayer()
 {
 	Vec3 vSpawnPosition = m_pEntity->GetWorldPos();
 	Quat qSpawnRotation = m_pEntity->GetRotation();
-	m_pPlayerEntity = g_EntityUtils->SpawnEntity(vSpawnPosition, qSpawnRotation, nullptr);
-	m_pPlayerEntity->GetOrCreateComponent<CPlayerComponent>();
+	m_pEnemyPlayerEntity = g_EntityUtils->SpawnEntity(vSpawnPosition, qSpawnRotation, nullptr);
+	m_pEnemyPlayerEntity->GetOrCreateComponent<CPlayerComponent>();
 
-	SpawnUnits(m_pPlayerEntity);
+	SpawnUnits(m_pEnemyPlayerEntity);
 }
 
 /******************************************************************************************************************************************************************************/

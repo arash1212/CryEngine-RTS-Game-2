@@ -8,6 +8,7 @@
 #include <CryEntitySystem/IEntitySystem.h>
 #include <CryGame/IGameFramework.h>
 
+/******************************************************************************************************************************************************************************/
 IEntity* EntityUtils::SpawnEntity(Vec3 position, Quat rotation, IEntity* ownerEntity)
 {
 	SEntitySpawnParams pEntitySpawnParams;
@@ -26,6 +27,7 @@ IEntity* EntityUtils::SpawnEntity(Vec3 position, Quat rotation, IEntity* ownerEn
 	return pSpawnedEntity;
 }
 
+/******************************************************************************************************************************************************************************/
 Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 {
 	if (entity) {
@@ -69,6 +71,7 @@ Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 	}
 }
 
+/******************************************************************************************************************************************************************************/
 IEntity* EntityUtils::GetClosestEntity(DynArray<IEntity*> entities, Vec3 to)
 {
 	f32 closest = 10000;
@@ -83,6 +86,7 @@ IEntity* EntityUtils::GetClosestEntity(DynArray<IEntity*> entities, Vec3 to)
 	return result;
 }
 
+/******************************************************************************************************************************************************************************/
 f32 EntityUtils::GetDistance(Vec3 from, Vec3 to, IEntity* toEntity)
 {
 	if (toEntity) {
@@ -96,11 +100,13 @@ f32 EntityUtils::GetDistance(Vec3 from, Vec3 to, IEntity* toEntity)
 	}
 }
 
+/******************************************************************************************************************************************************************************/
 f32 EntityUtils::GetDistance(Vec3 from, Vec3 to)
 {
 	return from.GetDistance(to);
 }
 
+/******************************************************************************************************************************************************************************/
 DynArray<IEntity*> EntityUtils::FindHostilePlayers(IEntity* toEntity)
 {
 	COwnerInfoComponent* pOwnerInfoComponent = toEntity->GetComponent<COwnerInfoComponent>();
@@ -119,7 +125,7 @@ DynArray<IEntity*> EntityUtils::FindHostilePlayers(IEntity* toEntity)
 			continue;
 		}
 		COwnerInfoComponent* pOtherOwnerInfoComponent = pEntity->GetComponent<COwnerInfoComponent>();
-		if (!pOwnerInfoComponent) {
+		if (!pOtherOwnerInfoComponent) {
 			continue;
 		}
 		if (pOtherOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam == pOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam) {
@@ -130,3 +136,19 @@ DynArray<IEntity*> EntityUtils::FindHostilePlayers(IEntity* toEntity)
 
 	return hostiles;
 }
+
+/******************************************************************************************************************************************************************************/
+void EntityUtils::SortEntitiesByDistance(DynArray<IEntity*>& entities, Vec3 position, int32 size)
+{
+	for (int32 i = 0; i < size; i++) {
+		for (int32 j = i; j < size; j++) {
+			f32 distanceToJ = g_EntityUtils->GetDistance(position, entities[j]->GetWorldPos());
+			f32 distanceToI = g_EntityUtils->GetDistance(position, entities[i]->GetWorldPos());
+			if (distanceToI < distanceToJ) {
+				std::swap(entities[i], entities[j]);
+			}
+		}
+	}
+}
+
+/******************************************************************************************************************************************************************************/

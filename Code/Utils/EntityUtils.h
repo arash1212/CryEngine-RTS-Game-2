@@ -14,6 +14,7 @@ public:
 	f32 GetDistance(Vec3 from, Vec3 to, IEntity* toEntity);
 	f32 GetDistance(Vec3 from, Vec3 to);
 	DynArray<IEntity*> FindHostilePlayers(IEntity* toEntity);
+	void SortEntitiesByDistance(DynArray<IEntity*>& entities, Vec3 position, int32 size);
 };
 
 static EntityUtils* g_EntityUtils = new EntityUtils();

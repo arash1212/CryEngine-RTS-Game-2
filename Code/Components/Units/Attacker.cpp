@@ -182,6 +182,9 @@ void CAttackerComponent::AttackRandomTarget()
 void CAttackerComponent::ValidateTarget()
 {
 	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
+	if (m_pAIControllerComponent->IsMoving()) {
+		m_pRandomAttackTarget = nullptr;
+	}
 	if (!target || target && target->IsGarbage() || m_pAttackInfo.m_pAttackType == EAttackType::MELEE && !m_pAIControllerComponent->IsDestinationReachable(target->GetWorldPos()) || m_pActionManagerComponent->IsProcessingAnAction() && !m_pActionManagerComponent->GetCurrentAction()->CanBeSkipped()) {
 		m_pAttackTargetEntity = nullptr;
 		m_pRandomAttackTarget = nullptr;
@@ -250,25 +253,32 @@ void CAttackerComponent::FindRandomTarget()
 			continue;
 		}
 
-		IEntity* pEntity = g_EntityUtils->GetClosestEntity(pPlayerComponent->GetOwnedEntities(), m_pEntity->GetWorldPos());
-		if (!pEntity || pEntity->IsGarbage()) {
-			continue;
-		}
+		DynArray<IEntity*> enemyOwnedEntitis = pPlayerComponent->GetOwnedEntities();
+		g_EntityUtils->SortEntitiesByDistance(enemyOwnedEntitis, m_pEntity->GetWorldPos(), enemyOwnedEntitis.size());
+		for (IEntity* pEntity : enemyOwnedEntitis) {
+			if (!pEntity || pEntity->IsGarbage()) {
+				continue;
+			}
+			CPlayerComponent* pOtherPlayerComponent = pEntity->GetComponent<CPlayerComponent>();
+			if (pOtherPlayerComponent) {
+				continue;
+			}
+			if (!IsTargetVisible(pEntity)) {
+				continue;
+			}
 
-		f32 distanceToTarget = g_EntityUtils->GetDistance(m_pEntity->GetWorldPos(), pEntity->GetWorldPos(), pEntity);
-		COwnerInfoComponent* otherEntityOwnerInfo = pEntity->GetComponent<COwnerInfoComponent>();
-		//Ignore entity if it's not in detection range
-		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget()) {
-			continue;
-		}
-		CryLog("enemy");
+			f32 distanceToTarget = g_EntityUtils->GetDistance(m_pEntity->GetWorldPos(), pEntity->GetWorldPos(), pEntity);
+			COwnerInfoComponent* otherEntityOwnerInfo = pEntity->GetComponent<COwnerInfoComponent>();
+			//Ignore entity if it's not in detection range
+			if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget()) {
+				continue;
+			}
 
-		//set entity as randomAttackTarget if it's team is not same as this unit's team
-		COwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<COwnerInfoComponent>();
-		if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetOwnerInfo().m_pPlayerTeam != pOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam) {
-			m_pRandomAttackTarget = pEntity;
-
-			CryLog("random target ?");
+			//set entity as randomAttackTarget if it's team is not same as this unit's team
+			COwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<COwnerInfoComponent>();
+			if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetOwnerInfo().m_pPlayerTeam != pOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam) {
+				m_pRandomAttackTarget = pEntity;
+			}
 		}
 	}
 	m_lookingForRandomTargetTimePassed = 0;
@@ -378,7 +388,7 @@ bool CAttackerComponent::IsTargetVisible(IEntity* target)
 
 	Vec3 currentPos = m_pEntity->GetPos();
 
-	Vec3 origin = Vec3(currentPos.x, currentPos.y, currentPos.z + 0.4f);
+	Vec3 origin = Vec3(currentPos.x, currentPos.y, currentPos.z + 1.2f);
 
 	Vec3 targetPosition = target->GetWorldPos();
 	//targetPosition.z += 0.3f;
@@ -388,24 +398,22 @@ bool CAttackerComponent::IsTargetVisible(IEntity* target)
 	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(targetPos);
 
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
+	pd->Begin("RaycastDetectionComp", true);
 	if (gEnv->pPhysicalWorld->RayWorldIntersection(origin, dir * distanceToTarget, ent_all, flags, hits.data(), 4, pSkippedEntities, 4)) {
 		//for (int32 i = 0; i < hits.size(); i++) {
 			if (hits[0].pCollider) {
-
 				//Debug
 				if (pd) {
-					pd->Begin("RaycastDetectionComp", true);
-					pd->AddLine(origin, hits[0].pt, ColorF(1, 0, 0), 4);
+					pd->AddLine(origin, hits[0].pt, ColorF(1, 0, 0), 1);
 				}
 
 				//return true if hitEntity is target
 				IEntity* hitEntity = gEnv->pEntitySystem->GetEntityFromPhysics(hits[0].pCollider);
-				if (hitEntity == m_pEntity) {
+				if (hitEntity == target) {
 					return true;
 				}
-				if (hitEntity && hitEntity == target || hitEntity->GetComponent<Cry::DefaultComponents::CCharacterControllerComponent>()) {
-					return true;
-				}
+
+				return false;
 			}
 		//}
 	}

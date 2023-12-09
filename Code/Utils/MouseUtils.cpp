@@ -6,6 +6,7 @@
 #include <CryInput/IHardwareMouse.h>
 #include <CryPhysics/physinterface.h>
 
+/******************************************************************************************************************************************************************************/
 Vec3 MouseUtils::GetPositionUnderCursor()
 {
 	Vec2 mousePos;
@@ -32,9 +33,12 @@ Vec3 MouseUtils::GetPositionUnderCursor()
 	return ZERO;
 }
 
+/******************************************************************************************************************************************************************************/
 Vec2 MouseUtils::GetCursorScreenPosition()
 {
 	Vec2 result;
 	gEnv->pHardwareMouse->GetHardwareMouseClientPosition(&result.x, &result.y);
 	return result;
 }
+
+/******************************************************************************************************************************************************************************/

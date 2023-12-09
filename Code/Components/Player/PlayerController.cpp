@@ -315,7 +315,7 @@ void CPlayerControllerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 			m_selectedEntities[i]->GetWorldBounds(aabb);
 			f32 width = aabb.max.x - aabb.min.x;
 			f32 height = aabb.max.y - aabb.min.y;
-			Vec3 pos = Vec3(position.x + ((column * (width + 0.4f))), position.y - ((row * (height + 0.4f))), position.z);
+			Vec3 pos = Vec3(position.x + ((column * (width + 1.0f))), position.y - ((row * (height + 1.0f))), position.z);
 
 			pd->AddSphere(pos, 0.3f, ColorF(0, 1, 0), 3);
 			pActionManagerComponent->AddAction(new UnitMoveAction(pEntity, pos, m_rightClickCount >= 2, nullptr));

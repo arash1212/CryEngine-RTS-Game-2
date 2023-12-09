@@ -23,7 +23,7 @@ public:
 	}
 
 private:
-	IEntity* m_pPlayerEntity = nullptr;
+	IEntity* m_pEnemyPlayerEntity = nullptr;
 
 private:
 	void SpawnPlayer();
