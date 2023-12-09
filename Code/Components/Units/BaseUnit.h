@@ -8,6 +8,7 @@ class CUnitAnimationComponent;
 class CUnitStateManagerComponent;
 class CUIItemProviderComponent;
 class CEntityCoverUserComponent;
+class COwnerInfoComponent;
 
 class CBaseUnitComponent : public IEntityComponent
 {
@@ -37,6 +38,7 @@ private:
 	CUnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 	CUIItemProviderComponent* m_pUIItemProviderComponent = nullptr;
 	CEntityCoverUserComponent* m_pEntityCoverUserComponent = nullptr;
+	COwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 private:
 };

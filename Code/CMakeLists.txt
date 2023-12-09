@@ -62,14 +62,16 @@ add_sources("Managers_uber.cpp"
 add_sources("Player_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Player"
-		"Components/Player/Player.cpp"
-		"Components/Player/Player.h"
+		"Components/Player/PlayerController.cpp"
+		"Components/Player/PlayerController.h"
 )
 add_sources("Selectables_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables"
+		"Components/Selectables/OwnerInfo.cpp"
 		"Components/Selectables/Selectable.cpp"
 		"Components/Selectables/UIItemProvider.cpp"
+		"Components/Selectables/OwnerInfo.h"
 		"Components/Selectables/Selectable.h"
 		"Components/Selectables/UIItemProvider.h"
 )

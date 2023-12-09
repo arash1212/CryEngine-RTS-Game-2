@@ -16,7 +16,7 @@ public:
 	static void ReflectType(Schematyc::CTypeDesc<CPlayerSpawnPointComponent>& desc)
 	{
 		desc.SetGUID("{847739A6-3F19-462E-BEFE-40EF7B08E95F}"_cry_guid);
-		desc.SetEditorCategory("Player");
+		desc.SetEditorCategory("SpawnPoints");
 		desc.SetDescription("Player Spawn Point Component");
 	}
 

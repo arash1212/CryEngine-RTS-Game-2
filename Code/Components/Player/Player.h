@@ -1,16 +1,7 @@
+#pragma once
 
-#include <DefaultComponents/Input/InputComponent.h>
-#include <DefaultComponents/Cameras/CameraComponent.h>
+class CPlayerComponent : public IEntityComponent {
 
-class CBoxSelectionUIComponent;
-class CInGameUIComponent;
-class IBaseUIItem;
-class UIElementEventListener;
-
-static constexpr f32 PLAYER_DEFAULT_MOVEMENT_SPEED = 10.f;
-
-class CPlayerComponent final : public IEntityComponent
-{
 public:
 	CPlayerComponent() = default;
 	virtual ~CPlayerComponent() = default;
@@ -24,58 +15,18 @@ public:
 	// Reflect type to set a unique identifier for this component
 	static void ReflectType(Schematyc::CTypeDesc<CPlayerComponent>& desc)
 	{
-		desc.SetGUID("{63F4C0C6-32AF-4ACB-8FB0-57D45DD14725}"_cry_guid);
+		desc.SetGUID("{44A2C91D-F649-4FE0-B16A-6A7B166A4E22}"_cry_guid);
 		desc.SetEditorCategory("Player");
-		desc.SetDescription("Player Component");
 	}
 
-protected:
-	Cry::DefaultComponents::CInputComponent* m_pInputComponent = nullptr;
-	Cry::DefaultComponents::CCameraComponent* m_pCameraComponent = nullptr;
-
-	CBoxSelectionUIComponent* m_pBoxSelectionUIComponent = nullptr;
-	CInGameUIComponent* m_pInGameUIComponent = nullptr;
-	UIElementEventListener* m_pUIElementEventListener = nullptr;
-
 private:
-	f32 m_movementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;
-	Vec3 m_movementOffset = ZERO;
-
-	//Right click count
-	int32 m_rightClickCount = 0;
-	f32 m_timeBetweenRightClickCountRestart = 0.15f;
-	f32 m_rightClickCountRestartTimePassed = 0.0f;
-
-	//Selections
-	DynArray<IEntity*> m_selectedEntities;
-
-	//UIItems
-	DynArray<IBaseUIItem*> m_currentUIItems;
-
-private:
-	void InitInputs();
-
-	void Move(f32 deltaTime);
-
-	//Input Handlers
-	void MoveForwardPressed(int activationMode, float value);
-	void MoveBackwardPressed(int activationMode, float value);
-	void MoveRightPressed(int activationMode, float value);
-	void MoveLeftPressed(int activationMode, float value);
-	void SelectionPressed(int activationMode, float value);
-	void CommandPressed(int activationMode, float value);
-
-	//Selection Functions
-	void SelectSelectables();
-	void DeSelectSelectables();
-
-	//Commands
-	void CommandSelectedUnitsToMoveTo(Vec3 position);
-
-	//UIItems
-	void UpdateActionbarItems();
+	bool m_isAI = true;
+	DynArray<IEntity*> m_ownedEntities;
 
 public:
-	//UIItems
-	void ExecuteActionbarItem(int32 index);
+	bool IsAI();
+	void SetIsAI(bool isAI);
+
+	void AddOwnedEntity(IEntity* entity);
+	void RemoveOwnedEntity(IEntity* entity);
 };

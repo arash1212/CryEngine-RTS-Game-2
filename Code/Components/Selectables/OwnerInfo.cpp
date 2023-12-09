@@ -1,9 +1,6 @@
 #include "StdAfx.h"
-#include "PlayerSpawnPoint.h"
+#include "OwnerInfo.h"
 #include "GamePlugin.h"
-
-#include "Utils/EntityUtils.h"
-#include "Components/Player/PlayerController.h"
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -12,37 +9,39 @@
 
 namespace
 {
-	static void RegisterPlayerSpawnPointComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterOwnerInfoComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CPlayerSpawnPointComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(COwnerInfoComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterPlayerSpawnPointComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterOwnerInfoComponent);
 }
 
 /******************************************************************************************************************************************************************************/
-void CPlayerSpawnPointComponent::Initialize()
+void COwnerInfoComponent::Initialize()
 {
+
 }
 
 /******************************************************************************************************************************************************************************/
-Cry::Entity::EventFlags CPlayerSpawnPointComponent::GetEventMask() const
+Cry::Entity::EventFlags COwnerInfoComponent::GetEventMask() const
 {
-	return Cry::Entity::EEvent::GameplayStarted |
+	return
+		Cry::Entity::EEvent::Initialize |
+		Cry::Entity::EEvent::GameplayStarted |
 		Cry::Entity::EEvent::Update |
 		Cry::Entity::EEvent::Reset;
 }
 
 /******************************************************************************************************************************************************************************/
-void CPlayerSpawnPointComponent::ProcessEvent(const SEntityEvent& event)
+void COwnerInfoComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
 	case Cry::Entity::EEvent::GameplayStarted: {
-		SpawnPlayer();
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
@@ -57,12 +56,14 @@ void CPlayerSpawnPointComponent::ProcessEvent(const SEntityEvent& event)
 }
 
 /******************************************************************************************************************************************************************************/
-void CPlayerSpawnPointComponent::SpawnPlayer()
+SOwnerInfo COwnerInfoComponent::GetOwnerInfo()
 {
-	Vec3 vSpawnPosition = m_pEntity->GetWorldPos();
-	Quat qSpawnRotation = m_pEntity->GetRotation();
-	m_pPlayerEntity = g_EntityUtils->SpawnEntity(vSpawnPosition, qSpawnRotation);
-	m_pPlayerEntity->GetOrCreateComponent<CPlayerControllerComponent>();
+	return m_pOwnerInfo;
+}
+
+void COwnerInfoComponent::SetOwnerInfo(SOwnerInfo ownerInfo)
+{
+	this->m_pOwnerInfo = ownerInfo;
 }
 
 /******************************************************************************************************************************************************************************/

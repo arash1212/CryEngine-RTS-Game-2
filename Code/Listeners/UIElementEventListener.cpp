@@ -1,6 +1,6 @@
 #include "UIElementEventListener.h"
 
-#include <Components/Player/Player.h>
+#include <Components/Player/PlayerController.h>
 
 void UIElementEventListener::OnUIEvent(IUIElement* pSender, const SUIEventDesc& event, const SUIArguments& args)
 {
@@ -9,7 +9,7 @@ void UIElementEventListener::OnUIEvent(IUIElement* pSender, const SUIEventDesc& 
 		if (eventName == "actionbar_button_click") {
 			int index = -1;
 			args.GetArg(0).GetValueWithConversion(index);
-			m_pPlayerComponent->ExecuteActionbarItem(index);
+			m_pPlayerControllerComponent->ExecuteActionbarItem(index);
 		}
 		if (eventName == "mouseOverUI") {
 			bIsMouseOverUI = true;
@@ -26,7 +26,7 @@ bool UIElementEventListener::IsMouseOverUI()
 	return bIsMouseOverUI;
 }
 
-void UIElementEventListener::SetPlayerComponent(CPlayerComponent* playerComponent)
+void UIElementEventListener::SetPlayerComponent(CPlayerControllerComponent* playerComponent)
 {
-	this->m_pPlayerComponent = playerComponent;
+	this->m_pPlayerControllerComponent = playerComponent;
 }

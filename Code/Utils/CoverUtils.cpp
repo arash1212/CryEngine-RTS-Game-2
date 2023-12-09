@@ -8,7 +8,7 @@
 
 
 #include <Components/Controller/AIController.h>
-#include <Components/Player/Player.h>
+#include <Components/Player/PlayerController.h>
 #include <Components/Cover/CoverPosition.h>
 #include <Utils/PhysicsUtils.h>
 #include <Utils/EntityUtils.h>
@@ -58,7 +58,7 @@ DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 positio
 		if (!pEntity) {
 			continue;
 		}
-		if (pEntity->GetComponent<CPlayerComponent>() || pEntity->GetComponent<CAIControllerComponent>()) {
+		if (pEntity->GetComponent<CPlayerControllerComponent>() || pEntity->GetComponent<CAIControllerComponent>()) {
 			continue;
 		}
 		f32 distanceToEntity = g_EntityUtils->GetDistance(position, pEntity->GetWorldPos(), pEntity);

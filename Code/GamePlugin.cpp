@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "GamePlugin.h"
 
-#include "Components/Player/Player.h"
+#include "Components/Player/PlayerController.h"
 
 #include <CrySchematyc/Env/IEnvRegistry.h>
 #include <CrySchematyc/Env/EnvPackage.h>

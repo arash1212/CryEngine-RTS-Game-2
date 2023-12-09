@@ -10,6 +10,7 @@
 #include <Components/Units/UnitAnimation.h>
 #include <Components/Selectables/UIItemProvider.h>
 #include <Components/Cover/EntityCoverUser.h>
+#include <Components/Selectables/OwnerInfo.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -55,6 +56,9 @@ void CBaseUnitComponent::Initialize()
 
 	//EntityCoverUserComponent Initialization
 	m_pEntityCoverUserComponent = m_pEntity->GetOrCreateComponent<CEntityCoverUserComponent>();
+
+	//OwnerInfoComponent Initialization
+	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<COwnerInfoComponent>();
 }
 
 /******************************************************************************************************************************************************************************/
