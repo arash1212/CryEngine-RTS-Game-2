@@ -1,6 +1,7 @@
 
 #include <DefaultComponents/Input/InputComponent.h>
 #include <DefaultComponents/Cameras/CameraComponent.h>
+#include <DefaultComponents/Audio/ListenerComponent.h>
 
 class CBoxSelectionUIComponent;
 class CInGameUIComponent;
@@ -40,6 +41,7 @@ protected:
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
 	CPlayerComponent* m_pPlayerComponent = nullptr;
 	COwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+	Cry::Audio::DefaultComponents::CListenerComponent* m_pAudioListenerComp = nullptr;
 
 private:
 	f32 m_movementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;

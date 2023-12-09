@@ -31,7 +31,7 @@ public:
 		desc.SetDescription("Base Unit Component");
 	}
 
-private:
+protected:
 	CSelectableComponent* m_pSelectableComponent = nullptr;
 	CAIControllerComponent* m_pAIControllerComponent = nullptr;
 	CActionManagerComponent* m_pActionManagerComponent = nullptr;

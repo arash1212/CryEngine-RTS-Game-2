@@ -29,6 +29,13 @@ void CPlayerComponent::Initialize()
 	//OwnerInfoComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<COwnerInfoComponent>();
 	m_pOwnerInfoComponent->SetCanBeTarget(false);
+	//
+	SOwnerInfo pOwnerInfo;
+	pOwnerInfo.m_pPlayer = EPlayer::PLAYER2;
+	pOwnerInfo.m_pPlayerFaction = EPlayerFaction::FACTION_1;
+	pOwnerInfo.m_pPlayerTeam = EPlayerTeam::TEAM_2;
+	pOwnerInfo.m_pPlayerComponent = this;
+	m_pOwnerInfoComponent->SetOwnerInfo(pOwnerInfo);
 }
 
 /******************************************************************************************************************************************************************************/

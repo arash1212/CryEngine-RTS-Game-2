@@ -63,7 +63,8 @@ void UnitMoveAction::Cancel()
 
 bool UnitMoveAction::IsDone()
 {
-	return false;
+	f32 distanceToPosition = g_EntityUtils->GetDistance(m_pEntity->GetWorldPos(), m_movePosition);
+	return distanceToPosition < 1.f;
 }
 
 bool UnitMoveAction::CanBeSkipped()

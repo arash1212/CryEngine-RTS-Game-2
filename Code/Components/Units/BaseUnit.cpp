@@ -59,10 +59,8 @@ void CBaseUnitComponent::Initialize()
 	m_pEntityCoverUserComponent = m_pEntity->GetOrCreateComponent<CEntityCoverUserComponent>();
 
 	//OwnerInfoComponent Initialization
-	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<COwnerInfoComponent>();
-
-	//AttackerComponent Initialization
-	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<CAttackerComponent>();
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<COwnerInfoComponent>();
+	m_pOwnerInfoComponent->SetCanBeTarget(true);
 }
 
 /******************************************************************************************************************************************************************************/

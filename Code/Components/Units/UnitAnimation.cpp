@@ -35,17 +35,6 @@ void CUnitAnimationComponent::Initialize()
 
 	//UnitStateManagerComponent Initialization
 	m_pUnitStateManagerComponent = m_pEntity->GetComponent<CUnitStateManagerComponent>();
-
-	//Animations
-	m_idleFragmentId = m_pAnimationComponent->GetFragmentId("Idle");
-	m_runFragmentId = m_pAnimationComponent->GetFragmentId("Run");
-	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
-	m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
-	m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
-
-	m_attack1FragmentId = m_pAnimationComponent->GetFragmentId("Attack1");
-	m_attack2FragmentId = m_pAnimationComponent->GetFragmentId("Attack2");
-	m_attack3FragmentId = m_pAnimationComponent->GetFragmentId("Attack3");
 }
 
 /******************************************************************************************************************************************************************************/
@@ -128,6 +117,21 @@ void CUnitAnimationComponent::UpdateAnimations()
 		m_activeFragmentId = currentFragmentId;
 		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
 	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CUnitAnimationComponent::InitAnimations()
+{
+	//Animations
+	m_idleFragmentId = m_pAnimationComponent->GetFragmentId("Idle");
+	m_runFragmentId = m_pAnimationComponent->GetFragmentId("Run");
+	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
+	m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
+	m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
+
+	m_attack1FragmentId = m_pAnimationComponent->GetFragmentId("Attack1");
+	m_attack2FragmentId = m_pAnimationComponent->GetFragmentId("Attack2");
+	m_attack3FragmentId = m_pAnimationComponent->GetFragmentId("Attack3");
 }
 
 /******************************************************************************************************************************************************************************/

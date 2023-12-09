@@ -16,11 +16,10 @@ IEntity* EntityUtils::SpawnEntity(Vec3 position, Quat rotation, IEntity* ownerEn
 	IEntity* pSpawnedEntity = gEnv->pEntitySystem->SpawnEntity(pEntitySpawnParams, true);
 
 	if (ownerEntity) {
-		COwnerInfoComponent* pOwnerInfoComponent = pSpawnedEntity->GetComponent<COwnerInfoComponent>();
-		if (pOwnerInfoComponent) {
-			COwnerInfoComponent* pOtherOwnerInfoComponent = pSpawnedEntity->GetComponent<COwnerInfoComponent>();
-			pOwnerInfoComponent->SetOwnerInfo(pOtherOwnerInfoComponent->GetOwnerInfo());
-		}
+		COwnerInfoComponent* pOwnerInfoComponent = ownerEntity->GetComponent<COwnerInfoComponent>();
+
+		COwnerInfoComponent* pSpawnedEntityOwnerInfoComponent = pSpawnedEntity->GetOrCreateComponent<COwnerInfoComponent>();
+		pSpawnedEntityOwnerInfoComponent->SetOwnerInfo(pOwnerInfoComponent->GetOwnerInfo());
 	}
 
 	CryLog("EntityUtils : (SpawnEntity) New Entity Spawned");
@@ -104,6 +103,8 @@ f32 EntityUtils::GetDistance(Vec3 from, Vec3 to)
 
 DynArray<IEntity*> EntityUtils::FindHostilePlayers(IEntity* toEntity)
 {
+	COwnerInfoComponent* pOwnerInfoComponent = toEntity->GetComponent<COwnerInfoComponent>();
+
 	DynArray<IEntity*> hostiles;
 	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
 	entityItPtr->MoveFirst();
@@ -115,6 +116,13 @@ DynArray<IEntity*> EntityUtils::FindHostilePlayers(IEntity* toEntity)
 		}
 		CPlayerComponent* pPlayerComponent = pEntity->GetComponent<CPlayerComponent>();
 		if (!pPlayerComponent) {
+			continue;
+		}
+		COwnerInfoComponent* pOtherOwnerInfoComponent = pEntity->GetComponent<COwnerInfoComponent>();
+		if (!pOwnerInfoComponent) {
+			continue;
+		}
+		if (pOtherOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam == pOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam) {
 			continue;
 		}
 		hostiles.append(pEntity);

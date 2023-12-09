@@ -30,6 +30,10 @@ struct SOwnerInfo {
 	EPlayerTeam m_pPlayerTeam;
 	EPlayerFaction m_pPlayerFaction;
 	CPlayerComponent* m_pPlayerComponent;
+
+	void SetPlayerComponent(CPlayerComponent* playerComponent) {
+		this->m_pPlayerComponent = playerComponent;
+	}
 };
 
 class COwnerInfoComponent final : public IEntityComponent

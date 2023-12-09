@@ -64,15 +64,18 @@ void CPlayerControllerComponent::Initialize()
 	m_pPlayerComponent = m_pEntity->GetOrCreateComponent<CPlayerComponent>();
 	m_pPlayerComponent->SetIsAI(false);
 
+	//TODO
 	//OwnerInfoComponent Initialization
-	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<COwnerInfoComponent>();
-	m_pOwnerInfoComponent->CanBeTarget();
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<COwnerInfoComponent>();
 	SOwnerInfo pOwnerInfo;
-	pOwnerInfo.m_pPlayer = EPlayer::PLAYER2;
+	pOwnerInfo.m_pPlayer = EPlayer::PLAYER1;
 	pOwnerInfo.m_pPlayerFaction = EPlayerFaction::FACTION_1;
-	pOwnerInfo.m_pPlayerTeam = EPlayerTeam::TEAM_2;
+	pOwnerInfo.m_pPlayerTeam = EPlayerTeam::TEAM_1;
 	pOwnerInfo.m_pPlayerComponent = m_pPlayerComponent;
 	m_pOwnerInfoComponent->SetOwnerInfo(pOwnerInfo);
+
+	//AudioListenerComponent initialization
+	m_pAudioListenerComp = m_pEntity->GetOrCreateComponent<Cry::Audio::DefaultComponents::CListenerComponent>();
 
 	//Inputs Initialization
 	InitInputs();

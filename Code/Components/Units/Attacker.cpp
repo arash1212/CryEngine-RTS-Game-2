@@ -228,7 +228,6 @@ void CAttackerComponent::ApplyDamageToTarget(IEntity* target)
 /******************************************************************************************************************************************************************************/
 void CAttackerComponent::FindRandomTarget()
 {
-
 	//|| m_pActionManagerComponent->IsProcessingAnAction()
 	if (m_pRandomAttackTarget || m_pAttackTargetEntity || m_pActionManagerComponent->IsProcessingAnAction() && !m_pActionManagerComponent->GetCurrentAction()->CanBeSkipped()) {
 		return;
@@ -237,7 +236,6 @@ void CAttackerComponent::FindRandomTarget()
 		return;
 	}
 
-
 	//TODO : error pure function call midad vaghti entity null mishod (remove mishod)
 	m_hostilePlayers = g_EntityUtils->FindHostilePlayers(m_pEntity);
 	for (IEntity* entity : m_hostilePlayers)
@@ -245,7 +243,6 @@ void CAttackerComponent::FindRandomTarget()
 		if (!entity) {
 			return;
 		}
-
 
 		//for (IEntity* pEntity : entity->GetComponent<ResourceManagerComponent>()->GetOwnedEntities()) {
 		CPlayerComponent* pPlayerComponent = entity->GetComponent<CPlayerComponent>();
@@ -257,18 +254,21 @@ void CAttackerComponent::FindRandomTarget()
 		if (!pEntity || pEntity->IsGarbage()) {
 			continue;
 		}
+
 		f32 distanceToTarget = g_EntityUtils->GetDistance(m_pEntity->GetWorldPos(), pEntity->GetWorldPos(), pEntity);
 		COwnerInfoComponent* otherEntityOwnerInfo = pEntity->GetComponent<COwnerInfoComponent>();
 		//Ignore entity if it's not in detection range
 		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget()) {
 			continue;
 		}
-
+		CryLog("enemy");
 
 		//set entity as randomAttackTarget if it's team is not same as this unit's team
 		COwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<COwnerInfoComponent>();
 		if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetOwnerInfo().m_pPlayerTeam != pOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam) {
 			m_pRandomAttackTarget = pEntity;
+
+			CryLog("random target ?");
 		}
 	}
 	m_lookingForRandomTargetTimePassed = 0;

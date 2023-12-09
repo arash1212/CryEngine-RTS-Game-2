@@ -2,6 +2,8 @@
 #include "OwnerInfo.h"
 #include "GamePlugin.h"
 
+#include <Components/Player/Player.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -64,7 +66,12 @@ SOwnerInfo COwnerInfoComponent::GetOwnerInfo()
 /******************************************************************************************************************************************************************************/
 void COwnerInfoComponent::SetOwnerInfo(SOwnerInfo ownerInfo)
 {
-	this->m_pOwnerInfo = ownerInfo;
+	this->m_pOwnerInfo.m_pPlayer = ownerInfo.m_pPlayer;
+	this->m_pOwnerInfo.m_pPlayerTeam = ownerInfo.m_pPlayerTeam;
+	this->m_pOwnerInfo.m_pPlayerFaction = ownerInfo.m_pPlayerFaction;
+	this->m_pOwnerInfo.m_pPlayerComponent = ownerInfo.m_pPlayerComponent;
+
+	this->m_pOwnerInfo.m_pPlayerComponent->AddOwnedEntity(m_pEntity);
 }
 
 /******************************************************************************************************************************************************************************/
