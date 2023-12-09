@@ -145,14 +145,11 @@ DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 positio
 void CoverUtils::SortPointsByDistance(DynArray<CCoverPosition*>& locations, Vec3 position, int32 size)
 {
 	for (int32 j = 0; j < size; j++) {
-		f32 closestDistance = 10000.f;
 		for (int32 i = j; i < size; i++) {
-			f32 distanceToCover = g_EntityUtils->GetDistance(position, locations[i]->GetCoverPosition());
-			if (distanceToCover < closestDistance) {
-				closestDistance = distanceToCover;
-				CCoverPosition* temp = new CCoverPosition(locations[j]->GetCoverObject(), locations[j]->GetCoverPosition());
-				locations[j] = locations[i];
-				locations[i] = temp;
+			f32 distanceToJ = g_EntityUtils->GetDistance(position, locations[j]->GetCoverPosition());
+			f32 distanceToI = g_EntityUtils->GetDistance(position, locations[i]->GetCoverPosition());
+			if (distanceToI < distanceToJ) {
+				std::swap(locations[i], locations[j]);
 			}
 		}
 	}

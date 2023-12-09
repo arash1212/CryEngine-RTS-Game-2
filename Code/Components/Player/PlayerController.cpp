@@ -231,15 +231,21 @@ void CPlayerControllerComponent::CommandPressed(int activationMode, float value)
 
 void CPlayerControllerComponent::SelectSelectables()
 {
+	DynArray<IEntity*> selectedEntities;
 	for (IEntity* entity : m_selectedEntities) {
 		CSelectableComponent* pSelectableComponent = entity->GetComponent<CSelectableComponent>();
 		if (!pSelectableComponent) {
 			continue;
 		}
+		COwnerInfoComponent* pOwnerInfoComponent = entity->GetComponent<COwnerInfoComponent>();
+		if (!pOwnerInfoComponent || pOwnerInfoComponent && pOwnerInfoComponent->GetOwnerInfo().m_pPlayer != m_pOwnerInfoComponent->GetOwnerInfo().m_pPlayer) {
+			continue;
+		}
 
 		pSelectableComponent->Select();
+		selectedEntities.append(entity);
 	}
-
+	m_selectedEntities = selectedEntities;
 	UpdateActionbarItems();
 }
 

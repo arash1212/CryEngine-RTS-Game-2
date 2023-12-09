@@ -17,7 +17,7 @@ enum class EAttackType {
 struct SUnitAttackInfo {
 public:
 	f32 m_maxAttackDistance = 20.f;
-	f32 m_detectionDistance = 30.f; //Used to find "RandomAttackTarget"
+	f32 m_detectionDistance = 50.f; //Used to find "RandomAttackTarget"
 	bool bIsHumanoid = false;
 	bool bIsFollower = true; //Follows "RandomAttackTarget" or not if it's not in this unit's attack range.
 	EAttackType m_pAttackType = EAttackType::RANGED;

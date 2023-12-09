@@ -62,7 +62,7 @@ void CSoldier1UnitComponent::Initialize()
 	pAttckInfo.m_pAttackType = EAttackType::RANGED;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.bIsFollower = false;
-	pAttckInfo.m_maxAttackDistance = 25.f;
+	pAttckInfo.m_maxAttackDistance = 40.f;
 	pAttckInfo.m_maxAttackCount = 7;
 	pAttckInfo.m_timeBetweenAttacks = 0.04f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);

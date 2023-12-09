@@ -6,6 +6,9 @@
 #include <Components/Managers/UnitStateManager.h>
 #include <CryAISystem/Components/IEntityCoverUserComponent.h>
 #include <Components/Cover/EntityCoverUser.h>
+#include <CryAISystem/IAISystem.h>
+#include <CryAISystem/INavigationSystem.h>
+#include <CryAISystem/NavigationSystem/INavMeshQueryFilter.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -36,18 +39,21 @@ void CAIControllerComponent::Initialize()
 	m_pNavigationComponent = m_pEntity->GetOrCreateComponent<IEntityNavigationComponent>();
 	m_pNavigationComponent->SetNavigationAgentType("MediumSizedCharacters");
 	//MovementProperties
-	IEntityNavigationComponent::SMovementProperties m_movementProps;
-	m_movementProps.normalSpeed = 3.f;
-	m_movementProps.minSpeed = 3.5;
-	m_movementProps.maxSpeed = 5;
-	m_movementProps.lookAheadDistance = 0.0f;
-	m_movementProps.maxDeceleration = 1200;
-	m_movementProps.bStopAtEnd = true;
-	m_pNavigationComponent->SetMovementProperties(m_movementProps);
+	IEntityNavigationComponent::SMovementProperties pMovementProps;
+	pMovementProps.normalSpeed = 2.f;
+	pMovementProps.minSpeed = 3;
+	pMovementProps.maxSpeed = 4;
+	pMovementProps.lookAheadDistance = 10.f;
+	pMovementProps.bStopAtEnd = true;
+
+	IEntityNavigationComponent::SCollisionAvoidanceProperties pCollisionAvoidanceProperties;
+	pCollisionAvoidanceProperties.radius = 0.6f;
+	m_pNavigationComponent->SetCollisionAvoidanceProperties(pCollisionAvoidanceProperties);
+	m_pNavigationComponent->SetMovementProperties(pMovementProps);
 
 	//Collision avoidance
 	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
-	collisionAvoidanceProps.radius = 0.01f;
+	collisionAvoidanceProps.radius = 0.3f;
 	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
 
 	//UnitStateManagerComponen Initialization
@@ -106,7 +112,8 @@ void CAIControllerComponent::MoveTo(Vec3 position)
 		return;
 	}
 
-	m_pNavigationComponent->NavigateTo(position);
+	Vec3 pos = SnapToNavmesh(position);
+	m_pNavigationComponent->NavigateTo(pos);
 }
 
 /******************************************************************************************************************************************************************************/
@@ -132,6 +139,18 @@ void CAIControllerComponent::LookAt(Vec3 position)
 	Vec3 dir = position - m_pEntity->GetWorldPos();
 	dir.z = 0;
 	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir));
+}
+
+/******************************************************************************************************************************************************************************/
+Vec3 CAIControllerComponent::SnapToNavmesh(Vec3 point)
+{
+	NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
+	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, point);
+	MNM::SOrderedSnappingMetrics snappingMetrics;
+	snappingMetrics.CreateDefault();
+	SAcceptAllQueryTrianglesFilter filter;
+	MNM::SPointOnNavMesh pointOnNavMesh = gEnv->pAISystem->GetNavigationSystem()->SnapToNavMesh(agentTypeId, point, snappingMetrics, &filter, &navMeshId);
+	return pointOnNavMesh.GetWorldPosition();
 }
 
 /******************************************************************************************************************************************************************************/

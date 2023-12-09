@@ -42,6 +42,7 @@ public:
 	void StopMoving();
 	void LookAt(Vec3 position);
 	bool IsDestinationReachable(Vec3 destination);
+	Vec3 SnapToNavmesh(Vec3 point);
 
 	bool IsMoving();
 	Vec3 GetVelocity();
