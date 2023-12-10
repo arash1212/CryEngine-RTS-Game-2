@@ -1,54 +1,68 @@
 #include "StdAfx.h"
-#include "EnemySpawnPoint.h"
+#include "BaseAIUnit.h"
 #include "GamePlugin.h"
 
-#include <Utils/EntityUtils.h>
-#include <Components/Player/Player.h>
 #include <Components/Selectables/OwnerInfo.h>
-#include <Components/Units/Units/Soldier1Unit.h>
-#include <Components/Units/BaseAIUnit.h>
+#include <Components/Managers/UnitStateManager.h>
+#include <Components/Controller/AIController.h>
+#include <Components/Weapons/BaseWeapon.h>
+#include <Components/Units/UnitAnimation.h>
+#include <Components/Managers/ActionManager.h>
+#include <Actions/IBaseAction.h>
+#include <Components/Player/Player.h>
+#include <Components/Player/PlayerController.h>
+#include <Components/Cover/EntityCoverUser.h>
+
+#include <Utils/MathUtils.h>
+#include <Utils/EntityUtils.h>
+#include <Utils/CoverUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
 #include <CryCore/StaticInstanceList.h>
 
+
 namespace
 {
-	static void RegisterEnemySpawnPointComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterBaseAIUnitComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CEnemySpawnPointComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(CBaseAIUnitComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterEnemySpawnPointComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterBaseAIUnitComponent);
 }
 
 /******************************************************************************************************************************************************************************/
-void CEnemySpawnPointComponent::Initialize()
+void CBaseAIUnitComponent::Initialize()
 {
+	//EntityCoverUserComponent Initialization
+	m_pEntityCoverUserComponent = m_pEntity->GetOrCreateComponent<CEntityCoverUserComponent>();
 }
 
 /******************************************************************************************************************************************************************************/
-Cry::Entity::EventFlags CEnemySpawnPointComponent::GetEventMask() const
+Cry::Entity::EventFlags CBaseAIUnitComponent::GetEventMask() const
 {
-	return Cry::Entity::EEvent::GameplayStarted |
+	return
+		Cry::Entity::EEvent::GameplayStarted |
 		Cry::Entity::EEvent::Update |
 		Cry::Entity::EEvent::Reset;
 }
 
 /******************************************************************************************************************************************************************************/
-void CEnemySpawnPointComponent::ProcessEvent(const SEntityEvent& event)
+void CBaseAIUnitComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
 	case Cry::Entity::EEvent::GameplayStarted: {
-		SpawnPlayer();
+		
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
+		//f32 DeltaTime = event.fParam[0];
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -60,26 +74,23 @@ void CEnemySpawnPointComponent::ProcessEvent(const SEntityEvent& event)
 }
 
 /******************************************************************************************************************************************************************************/
-void CEnemySpawnPointComponent::SpawnPlayer()
+bool CBaseAIUnitComponent::LookForCover()
 {
-	Vec3 vSpawnPosition = m_pEntity->GetWorldPos();
-	Quat qSpawnRotation = m_pEntity->GetRotation();
-	m_pEnemyPlayerEntity = g_EntityUtils->SpawnEntity(vSpawnPosition, qSpawnRotation, nullptr);
-	m_pEnemyPlayerEntity->GetOrCreateComponent<CPlayerComponent>();
-
-	SpawnUnits(m_pEnemyPlayerEntity);
+	if (!m_pEntityCoverUserComponent->GetCurrentCoverPosition()) {
+		m_pEntityCoverUserComponent->SetCurrentCoverPosition(g_CoverUtils->FindCoverPointsAroundPosition(m_pEntity->GetWorldPos(), 30, 1)[0]);
+		CryLog("cover set ");
+		return false;
+	}
+	else {
+		return true;
+	}
+	return false;
 }
 
 /******************************************************************************************************************************************************************************/
-void CEnemySpawnPointComponent::SpawnUnits(IEntity* ownerPlayer)
+void CBaseAIUnitComponent::MoveToCover(CCoverPosition* coverPosition)
 {
-	for (int32 i = 0; i < 4; i++) {
-		Vec3 pos = m_pEntity->GetWorldPos();
-		pos.x += i * (1);
-		IEntity* pSpawnedUnitEntity = g_EntityUtils->SpawnEntity(pos, m_pEntity->GetRotation(), ownerPlayer);
-		pSpawnedUnitEntity->GetOrCreateComponent<CSoldier1UnitComponent>();
-		pSpawnedUnitEntity->GetOrCreateComponent<CBaseAIUnitComponent>();
-	}
+	this->m_pEntityCoverUserComponent->SetCurrentCoverPosition(coverPosition);
 }
 
 /******************************************************************************************************************************************************************************/

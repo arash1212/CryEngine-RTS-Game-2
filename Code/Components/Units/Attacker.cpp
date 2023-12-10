@@ -14,6 +14,7 @@
 
 #include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
+#include <Utils/PhysicsUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -146,7 +147,7 @@ break;
 	}
 
 	m_attackTimePassed = 0;
-	m_attackCountResetTimePassed = 0.f;
+	m_attackCountResetTimePassed = -1.f;
 }
 
 /******************************************************************************************************************************************************************************/
@@ -212,6 +213,19 @@ void CAttackerComponent::PerformRangedAttack(IEntity* target)
 		this->ApplyDamageToTarget(target);
 
 		m_pAttackInfo.m_attackCount++;
+
+		//TODO
+		Vec3 from = m_pWeaponComponent->GetMuzzlePosition();
+		//from.z += 0.4f;
+		Vec3 to = target->GetWorldPos();
+		to.z += 0.9f;
+		IEntity* pHitEntity = g_PhysicsUtils->RaycastGetEntity(from, to);
+		IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
+		pd->Begin("CAttackerComponent_PerformRangedAttack", false);
+		if (pHitEntity && pHitEntity == target) {
+			pd->AddLine(from, to, ColorF(1, 0, 0), 0.3f);
+			CryLog("attacker hit : %s", pHitEntity->GetName());
+		}
 	}
 }
 
@@ -398,13 +412,13 @@ bool CAttackerComponent::IsTargetVisible(IEntity* target)
 	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(targetPos);
 
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
-	pd->Begin("RaycastDetectionComp", true);
+	pd->Begin("RaycastDetectionComp", false);
 	if (gEnv->pPhysicalWorld->RayWorldIntersection(origin, dir * distanceToTarget, ent_all, flags, hits.data(), 4, pSkippedEntities, 4)) {
 		//for (int32 i = 0; i < hits.size(); i++) {
 			if (hits[0].pCollider) {
 				//Debug
 				if (pd) {
-					pd->AddLine(origin, hits[0].pt, ColorF(1, 0, 0), 1);
+					pd->AddLine(origin, hits[0].pt, ColorF(0, 1, 0), 0.01f);
 				}
 
 				//return true if hitEntity is target

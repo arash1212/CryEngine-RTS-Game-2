@@ -4,6 +4,11 @@
 
 #include <Actions/IBaseAction.h>
 #include <Components/Selectables/OwnerInfo.h>
+#include <Components/Units/BaseAIUnit.h>
+#include <Components/Cover/EntityCoverUser.h>
+#include <Components/Cover/CoverPosition.h>
+
+#include <Utils/CoverUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -57,6 +62,7 @@ void CPlayerComponent::ProcessEvent(const SEntityEvent& event)
 	}break;
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
+		CommandUnitsToTakeCover();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -103,6 +109,30 @@ void CPlayerComponent::RemoveOwnedEntity(IEntity* entity)
 DynArray<IEntity*> CPlayerComponent::GetOwnedEntities()
 {
 	return m_ownedEntities;
+}
+
+/******************************************************************************************************************************************************************************/
+void CPlayerComponent::CommandUnitsToTakeCover()
+{
+	if (!m_isAI) {
+		return;
+	}
+	for (int32 i = 0; i < m_ownedEntities.size(); i++) {
+		CBaseAIUnitComponent* pAIUnitComponent = m_ownedEntities[i]->GetComponent<CBaseAIUnitComponent>();
+		if (!pAIUnitComponent) {
+			continue;
+		}
+		CEntityCoverUserComponent* pEntityCoverUserComponent = m_ownedEntities[i]->GetComponent<CEntityCoverUserComponent>();
+		if (!pEntityCoverUserComponent) {
+			continue;
+		}
+		if (pEntityCoverUserComponent->GetCurrentCoverPosition()) {
+			continue;
+		}
+
+		DynArray<CCoverPosition*> pCoverPositions = g_CoverUtils->FindCoverPointsAroundPosition(m_ownedEntities[i]->GetWorldPos(), 30, m_ownedEntities.size());
+		pAIUnitComponent->MoveToCover(pCoverPositions[0]);
+	}
 }
 
 /******************************************************************************************************************************************************************************/

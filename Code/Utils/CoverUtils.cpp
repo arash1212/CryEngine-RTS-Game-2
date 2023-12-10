@@ -6,7 +6,6 @@
 #include <CryAISystem/Components/IEntityCoverUserComponent.h>
 #include <Components/Cover/EntityCoverUser.h>
 
-
 #include <Components/Controller/AIController.h>
 #include <Components/Player/PlayerController.h>
 #include <Components/Cover/CoverPosition.h>
@@ -79,13 +78,13 @@ DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 positio
 		width -= 0.2f;
 		height -= 0.2f;
 
-		f32 currX = min.x + 0.2f;
+		f32 currX = min.x + 0.5f;
 		while (currX <= min.x + width)
 		{
 			Vec3 vec1(currX, min.y - pointDistanceToCover, min.z + 1.f);
 			vec1 = g_PhysicsUtils->RaycastGetHitPoint(vec1, g_EntityUtils->GetClosetPointOnMeshBorder(vec1, pEntity));
 			vec1.y -= pointDistanceToCover;
-			IEntity* vec1Entity = g_PhysicsUtils->RaycastGetEntnity(vec1, position);
+			IEntity* vec1Entity = g_PhysicsUtils->RaycastGetEntity(vec1, position);
 			if (!vec1Entity || vec1Entity != pEntity) {
 				tempResult.append(new CCoverPosition(pEntity, vec1));
 			}
@@ -93,7 +92,7 @@ DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 positio
 			Vec3 vec2(currX, max.y + pointDistanceToCover, min.z + 1.f);
 			vec2 = g_PhysicsUtils->RaycastGetHitPoint(vec2, g_EntityUtils->GetClosetPointOnMeshBorder(vec2, pEntity));
 			vec2.y += pointDistanceToCover;
-			IEntity* vec2Entity = g_PhysicsUtils->RaycastGetEntnity(vec2, position);
+			IEntity* vec2Entity = g_PhysicsUtils->RaycastGetEntity(vec2, position);
 			if (!vec2Entity || vec2Entity != pEntity) {
 				tempResult.append(new CCoverPosition(pEntity, vec2));
 			}
@@ -101,13 +100,13 @@ DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 positio
 			currX += diff;
 		}
 
-		f32 currY = min.y + 0.2f;
+		f32 currY = min.y + 0.5f;
 		while (currY <= min.y + height)
 		{
 			Vec3 vec1(min.x - pointDistanceToCover, currY, min.z + 1.f);
 			vec1 = g_PhysicsUtils->RaycastGetHitPoint(vec1, g_EntityUtils->GetClosetPointOnMeshBorder(vec1, pEntity));
 			vec1.x -= pointDistanceToCover;
-			IEntity* vec1Entity = g_PhysicsUtils->RaycastGetEntnity(vec1, position);
+			IEntity* vec1Entity = g_PhysicsUtils->RaycastGetEntity(vec1, position);
 			if (!vec1Entity || vec1Entity != pEntity) {
 				tempResult.append(new CCoverPosition(pEntity, vec1));
 			}
@@ -115,7 +114,7 @@ DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 positio
 			Vec3 vec2(max.x + pointDistanceToCover, currY, min.z + 1.f);
 			vec2 = g_PhysicsUtils->RaycastGetHitPoint(vec2, g_EntityUtils->GetClosetPointOnMeshBorder(vec2, pEntity));
 			vec2.x += pointDistanceToCover;
-			IEntity* vec2Entity = g_PhysicsUtils->RaycastGetEntnity(vec2, position);
+			IEntity* vec2Entity = g_PhysicsUtils->RaycastGetEntity(vec2, position);
 			if (!vec2Entity || vec2Entity != pEntity) {
 				tempResult.append(new CCoverPosition(pEntity, vec2));
 			}
@@ -133,7 +132,7 @@ DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 positio
 		for (int32 i = 0; i < size; i++) {
 			if (IsCoverPointValid(tempResult[i])) {
 				result.append(tempResult[i]);
-				pd->AddSphere(tempResult[i]->GetCoverPosition(), 0.3f, ColorF(0.9f, 0.5f, 0), 1.3f);
+				pd->AddSphere(tempResult[i]->GetCoverPosition(), 0.3f, ColorF(0.9f, 0.5f, 0), 5.0f);
 			}
 		}
 	}

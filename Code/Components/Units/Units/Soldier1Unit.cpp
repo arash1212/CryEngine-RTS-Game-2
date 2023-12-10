@@ -64,11 +64,13 @@ void CSoldier1UnitComponent::Initialize()
 	pAttckInfo.bIsFollower = false;
 	pAttckInfo.m_maxAttackDistance = 40.f;
 	pAttckInfo.m_maxAttackCount = 7;
-	pAttckInfo.m_timeBetweenAttacks = 0.04f;
+	pAttckInfo.m_timeBetweenAttacks = 0.3f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//UnitAnimationComponent Initialization
 	m_pUnitAnimationComponent->InitAnimations();
+
+	m_pEntity->SetName("Soldier1");
 }
 
 /******************************************************************************************************************************************************************************/

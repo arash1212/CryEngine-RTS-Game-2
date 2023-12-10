@@ -35,9 +35,6 @@ Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 		entity->GetWorldBounds(aabb);
 		Vec3 to = entity->GetWorldPos();
 
-		IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
-		pd->Begin("tessadadsadt1231", true);
-
 		f32 diffX = aabb.max.x - aabb.GetCenter().x;
 		f32 diffY = aabb.max.y - aabb.GetCenter().y;
 
@@ -63,7 +60,6 @@ Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 		else {
 			pos.y = from.y;
 		}
-		pd->AddSphere(pos, 0.4f, ColorF(0, 1, 0), 0.4f);
 		return pos;
 	}
 	else {

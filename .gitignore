@@ -37,6 +37,7 @@ build/
 Assets/*
 Editor/*
 user/*
+user(1)/*
 user/bin/win_x64/Game.pdb
 solutions/
 logbackups/*

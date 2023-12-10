@@ -278,7 +278,7 @@ void CPlayerControllerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 	int32 row = 0, column = 0;
 	int32 unitsCount = m_selectedEntities.size();
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
-	pd->Begin("CommandSelectedUnitsToMoveTo_MovePoints", true);
+	pd->Begin("CommandSelectedUnitsToMoveTo_MovePoints", false);
 
 	for (int32 i = 0; i < m_selectedEntities.size(); i++) {
 		IEntity* pEntity = m_selectedEntities[i];

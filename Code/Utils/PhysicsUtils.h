@@ -6,7 +6,7 @@ public:
 	~PhysicsUtils() = default;
 
 public:
-	IEntity* RaycastGetEntnity(Vec3 from, Vec3 to);
+	IEntity* RaycastGetEntity(Vec3 from, Vec3 to);
 	Vec3 RaycastGetHitNormal(Vec3 from, Vec3 to);
 	Vec3 RaycastGetHitPoint(Vec3 from, Vec3 to);
 };

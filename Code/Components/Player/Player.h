@@ -28,6 +28,9 @@ private:
 	bool m_isAI = true;
 	DynArray<IEntity*> m_ownedEntities;
 
+private:
+	void CommandUnitsToTakeCover();
+
 public:
 	bool IsAI();
 	void SetIsAI(bool isAI);
