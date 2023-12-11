@@ -29,6 +29,7 @@ private:
 private:
 	CCoverPosition* m_pCurrentCoverPosition = nullptr;
 	bool m_isMovingToCover = false;
+	bool m_isStanceSet = false;
 
 public:
 	void MoveToCover();

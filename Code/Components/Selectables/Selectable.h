@@ -26,6 +26,7 @@ private:
 	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
 	IRenderNode* m_pRenderNode = nullptr;
 
+	bool m_isSelected = false;
 private:
 
 	//Highligh Colors
@@ -40,4 +41,6 @@ public:
 	void HighLightGreen();
 	void HighLightRed();
 	void HighLightBlack();
+
+	bool IsSelected();
 };

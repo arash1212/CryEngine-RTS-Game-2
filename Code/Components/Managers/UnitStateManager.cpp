@@ -52,6 +52,7 @@ void CUnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
 
 		UpdateSpeed();
 		UpdateState();
+		UpdateCurrentHeight();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -101,6 +102,23 @@ void CUnitStateManagerComponent::UpdateSpeed()
 }
 
 /******************************************************************************************************************************************************************************/
+void CUnitStateManagerComponent::UpdateCurrentHeight()
+{
+	if (m_pUnitStance == EUnitStance::PRONE) {
+		m_currentHeight = m_proneHeight;
+	}
+	else if (m_pUnitStance == EUnitStance::CROUCH) {
+		m_currentHeight = m_crouchHeight;
+	}
+	else if (m_pUnitStance == EUnitStance::STANDING) {
+		m_currentHeight = m_standingHeight;
+	}
+	else if (m_pUnitStance == EUnitStance::RUNNING) {
+		m_currentHeight = m_standingHeight;
+	}
+}
+
+/******************************************************************************************************************************************************************************/
 EUnitState CUnitStateManagerComponent::GetState()
 {
 	return this->m_pUnitState;
@@ -122,6 +140,12 @@ EUnitStance CUnitStateManagerComponent::GetStance()
 f32 CUnitStateManagerComponent::GetCurrentSpeed()
 {
 	return this->m_currentSpeed;
+}
+
+/******************************************************************************************************************************************************************************/
+f32 CUnitStateManagerComponent::GetCurrentHeight()
+{
+	return m_currentHeight;
 }
 
 /******************************************************************************************************************************************************************************/

@@ -71,4 +71,5 @@ public:
 	
 	CryAudio::ControlId GetRandomShootSound();
 	string GetAttachmentName();
+	Vec3 GetLeftHandPosition();
 };

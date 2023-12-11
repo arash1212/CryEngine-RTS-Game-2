@@ -46,9 +46,15 @@ private:
 	f32 m_runSpeed = 2.f;
 	f32 m_currentSpeed = 0.f;
 
+	f32 m_proneHeight = 0.1f;
+	f32 m_crouchHeight = 1.2f;
+	f32 m_standingHeight = 1.3f;
+	f32 m_currentHeight = m_crouchHeight;
+
 private:
 	void UpdateState();
 	void UpdateSpeed();
+	void UpdateCurrentHeight();
 
 public:
 	EUnitState GetState();
@@ -57,4 +63,5 @@ public:
 	EUnitStance GetStance();
 
 	f32 GetCurrentSpeed();
+	f32 GetCurrentHeight();
 };

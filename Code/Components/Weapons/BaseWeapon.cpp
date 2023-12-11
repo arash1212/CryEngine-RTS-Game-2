@@ -25,6 +25,7 @@ namespace
 	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterBaseWeaponComponent);
 }
 
+/******************************************************************************************************************************************************************************/
 void CBaseWeaponComponent::Initialize()
 {
 	/*
@@ -65,6 +66,7 @@ void CBaseWeaponComponent::Initialize()
 
 }
 
+/******************************************************************************************************************************************************************************/
 Cry::Entity::EventFlags CBaseWeaponComponent::GetEventMask() const
 {
 	return
@@ -73,6 +75,7 @@ Cry::Entity::EventFlags CBaseWeaponComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
+/******************************************************************************************************************************************************************************/
 void CBaseWeaponComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
@@ -107,6 +110,7 @@ void CBaseWeaponComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
+/******************************************************************************************************************************************************************************/
 IEntity* CBaseWeaponComponent::Raycast(Vec3 to)
 {
 	Vec3 origin = m_pEntity->GetWorldPos();
@@ -129,6 +133,7 @@ IEntity* CBaseWeaponComponent::Raycast(Vec3 to)
 	return nullptr;
 }
 
+/******************************************************************************************************************************************************************************/
 /*
 void CBaseWeaponComponent::SpawnProjectile(IEntity* target)
 {
@@ -151,6 +156,7 @@ void CBaseWeaponComponent::SpawnProjectile(IEntity* target)
 }
 */
 
+/******************************************************************************************************************************************************************************/
 bool CBaseWeaponComponent::Fire(IEntity* target)
 {
 	if (m_shotTimePassed >= m_timeBetweenShots) {
@@ -166,7 +172,7 @@ bool CBaseWeaponComponent::Fire(IEntity* target)
 	return false;
 }
 
-
+/******************************************************************************************************************************************************************************/
 void CBaseWeaponComponent::Draw()
 {
 	if (!m_pWeaponAttachment) {
@@ -175,6 +181,7 @@ void CBaseWeaponComponent::Draw()
 	m_pWeaponAttachment->HideAttachment(0);
 }
 
+/******************************************************************************************************************************************************************************/
 void CBaseWeaponComponent::PutAway()
 {
 	if (!m_pWeaponAttachment) {
@@ -183,16 +190,25 @@ void CBaseWeaponComponent::PutAway()
 	m_pWeaponAttachment->HideAttachment(1);
 }
 
+/******************************************************************************************************************************************************************************/
 Vec3 CBaseWeaponComponent::GetMuzzlePosition()
 {
 	return   m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("Muzzle")->GetAttWorldAbsolute().t;
 }
 
+/******************************************************************************************************************************************************************************/
 string CBaseWeaponComponent::GetAttachmentName()
 {
 	return "ak47";
 }
 
+/******************************************************************************************************************************************************************************/
+Vec3 CBaseWeaponComponent::GetLeftHandPosition()
+{
+	return m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("LeftHandPos")->GetAttWorldAbsolute().t;;
+}
+
+/******************************************************************************************************************************************************************************/
 CryAudio::ControlId CBaseWeaponComponent::GetRandomShootSound()
 {
 	int32 randomNum = 0;
@@ -202,6 +218,7 @@ CryAudio::ControlId CBaseWeaponComponent::GetRandomShootSound()
 	return m_shootSounds.At(randomNum);
 }
 
+/******************************************************************************************************************************************************************************/
 void CBaseWeaponComponent::UpdateMuzzleFlashes()
 {
 	if (!m_pMuzzleFlashAttachment1) {
@@ -220,3 +237,5 @@ void CBaseWeaponComponent::UpdateMuzzleFlashes()
 		}
 	}
 }
+
+/******************************************************************************************************************************************************************************/

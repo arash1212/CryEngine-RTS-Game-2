@@ -10,6 +10,7 @@ class CUIItemProviderComponent;
 class CEntityCoverUserComponent;
 class COwnerInfoComponent;
 class CAttackerComponent;
+class CHealthComponent;
 
 class CBaseUnitComponent : public IEntityComponent
 {
@@ -41,6 +42,7 @@ protected:
 	CEntityCoverUserComponent* m_pEntityCoverUserComponent = nullptr;
 	COwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 	CAttackerComponent* m_pAttackerComponent = nullptr;
+	CHealthComponent* m_pHealthComponent = nullptr;
 
 private:
 };

@@ -65,8 +65,9 @@ void CEntityCoverUserComponent::ProcessEvent(const SEntityEvent& event)
 				m_isMovingToCover = true;
 			}
 			else {
-				if (m_pCurrentCoverPosition->GetCoverHeight() < GetHeight()) {
+				if (!m_isStanceSet && m_pCurrentCoverPosition->GetCoverHeight() < GetHeight()) {
 					m_pUnitStateManagerComponent->SetStance(EUnitStance::CROUCH);
+					m_isStanceSet = true;
 				}
 				Vec3 normal = GetCurrentCoverNormal();
 				m_pAIControllerComponent->LookAt(normal);
@@ -111,6 +112,7 @@ void CEntityCoverUserComponent::SetCurrentCoverPosition(CCoverPosition* coverPos
 {
 	this->m_pCurrentCoverPosition = coverPosition;
 	this->m_isMovingToCover = false;
+	this->m_isStanceSet = false;
 }
 
 /******************************************************************************************************************************************************************************/

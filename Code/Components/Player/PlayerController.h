@@ -1,3 +1,4 @@
+#pragma once
 
 #include <DefaultComponents/Input/InputComponent.h>
 #include <DefaultComponents/Cameras/CameraComponent.h>
@@ -10,6 +11,9 @@ class UIElementEventListener;
 class CPlayerComponent;
 class COwnerInfoComponent;
 
+static const string PLAYER_NAME = "playerName";
+static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 25.f;
+static const f32 PLAYER_CAMERA_MAX_ZOOM_AMOUNT = 6.f;
 static constexpr f32 PLAYER_DEFAULT_MOVEMENT_SPEED = 10.f;
 
 class CPlayerControllerComponent final : public IEntityComponent
@@ -47,6 +51,11 @@ private:
 	f32 m_movementSpeed = PLAYER_DEFAULT_MOVEMENT_SPEED;
 	Vec3 m_movementOffset = ZERO;
 
+	//ZoomIn/Out
+	f32 m_cameraMaxZoomAmount = PLAYER_CAMERA_MAX_ZOOM_AMOUNT;
+	f32 m_currentZoomAmount = 0;
+	f32 m_defaultPosZ = 0;
+
 	//Right click count
 	int32 m_rightClickCount = 0;
 	f32 m_timeBetweenRightClickCountRestart = 0.15f;
@@ -54,9 +63,11 @@ private:
 
 	//Selections
 	DynArray<IEntity*> m_selectedEntities;
+	int32 m_lastSelectablesCheckSize = 0;
 
 	//UIItems
 	DynArray<IBaseUIItem*> m_currentUIItems;
+
 
 private:
 	void InitInputs();
@@ -70,10 +81,13 @@ private:
 	void MoveLeftPressed(int activationMode, float value);
 	void SelectionPressed(int activationMode, float value);
 	void CommandPressed(int activationMode, float value);
+	void ZoonInPressed(int activationMode, float value);
+	void ZoomOutPressed(int activationMode, float value);
 
 	//Selection Functions
 	void SelectSelectables();
 	void DeSelectSelectables();
+	void ValidateSelectables();
 
 	//Commands
 	void CommandSelectedUnitsToMoveTo(Vec3 position);

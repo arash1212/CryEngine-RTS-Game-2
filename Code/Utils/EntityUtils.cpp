@@ -148,3 +148,34 @@ void EntityUtils::SortEntitiesByDistance(DynArray<IEntity*>& entities, Vec3 posi
 }
 
 /******************************************************************************************************************************************************************************/
+bool EntityUtils::IsEntityInsideViewPort(Cry::DefaultComponents::CCameraComponent* camera, IEntity* entity)
+{
+	Vec3 pos = entity->GetWorldPos();
+	Vec3 result;
+	camera->GetCamera().Project(pos, result);
+
+	int32 vHeight = gEnv->pRenderer->GetHeight();
+	int32 vWidth = gEnv->pRenderer->GetWidth();
+
+	return result.x >= 0 && result.x <= vWidth && result.y >= 0 && result.y <= vHeight;
+}
+
+/******************************************************************************************************************************************************************************/
+void EntityUtils::RemoveEntity(IEntity* entity)
+{
+	COwnerInfoComponent* pOwnerInfoComponent = entity->GetOrCreateComponent<COwnerInfoComponent>();
+	if (!pOwnerInfoComponent) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "EntityUtils :(RemoveEntity) No OwnerInfo Found on entity !");
+		return;
+	}
+	CPlayerComponent* pPlayerComponent = pOwnerInfoComponent->GetOwnerInfo().m_pPlayerComponent;;
+	if (!pPlayerComponent) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "EntityUtils :(SpawnEntity) No pPlayerComponent found on OwnerEntity");
+		return;
+	}
+
+	pPlayerComponent->RemoveOwnedEntity(entity);
+	gEnv->pEntitySystem->RemoveEntity(entity->GetId());
+}
+
+/******************************************************************************************************************************************************************************/

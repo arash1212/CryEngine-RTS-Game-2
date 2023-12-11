@@ -11,6 +11,7 @@
 #include <Actions/IBaseAction.h>
 #include <Components/Player/Player.h>
 #include <Components/Player/PlayerController.h>
+#include <Components/Selectables/Health.h>
 
 #include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
@@ -210,21 +211,29 @@ void CAttackerComponent::PerformRangedAttack(IEntity* target)
 	if (m_pWeaponComponent->Fire(target)) {
 		m_pUnitAnimationComponent->PlayRandomAttackAnimation();
 
-		this->ApplyDamageToTarget(target);
-
 		m_pAttackInfo.m_attackCount++;
 
 		//TODO
 		Vec3 from = m_pWeaponComponent->GetMuzzlePosition();
 		//from.z += 0.4f;
 		Vec3 to = target->GetWorldPos();
-		to.z += 0.9f;
+
+		CUnitStateManagerComponent* pUnitStateManagerComponent = target->GetComponent<CUnitStateManagerComponent>();
+		if (pUnitStateManagerComponent) {
+			to.z += pUnitStateManagerComponent->GetCurrentHeight();
+		}
 		IEntity* pHitEntity = g_PhysicsUtils->RaycastGetEntity(from, to);
 		IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 		pd->Begin("CAttackerComponent_PerformRangedAttack", false);
 		if (pHitEntity && pHitEntity == target) {
 			pd->AddLine(from, to, ColorF(1, 0, 0), 0.3f);
-			CryLog("attacker hit : %s", pHitEntity->GetName());
+			this->ApplyDamageToTarget(target);
+		}
+		else {
+			if (pHitEntity) {
+				pd->AddLine(from, to, ColorF(1, 0, 1), 0.3f);
+				CryLog("attacker hit : %s", pHitEntity->GetName());
+			}
 		}
 	}
 }
@@ -232,14 +241,12 @@ void CAttackerComponent::PerformRangedAttack(IEntity* target)
 /******************************************************************************************************************************************************************************/
 void CAttackerComponent::ApplyDamageToTarget(IEntity* target)
 {
-	/*
-	HealthComponent* healthComponent = target->GetComponent<HealthComponent>();
+	CHealthComponent* healthComponent = target->GetComponent<CHealthComponent>();
 	if (!healthComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackerComponent : (ApplyDamageToTarget) target have to healthComonent assigned.");
 		return;
 	}
 	healthComponent->ApplyDamage(m_damageAmount);
-	*/
 }
 
 /******************************************************************************************************************************************************************************/

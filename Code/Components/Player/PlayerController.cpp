@@ -40,6 +40,8 @@ namespace
 /******************************************************************************************************************************************************************************/
 void CPlayerControllerComponent::Initialize()
 {
+	m_defaultPosZ = m_pEntity->GetPos().z;
+
 	//InputComponent Initialization
 	m_pInputComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CInputComponent>();
 
@@ -77,6 +79,8 @@ void CPlayerControllerComponent::Initialize()
 	//AudioListenerComponent initialization
 	m_pAudioListenerComp = m_pEntity->GetOrCreateComponent<Cry::Audio::DefaultComponents::CListenerComponent>();
 
+	m_pEntity->SetName(PLAYER_NAME);
+
 	//Inputs Initialization
 	InitInputs();
 }
@@ -103,6 +107,8 @@ void CPlayerControllerComponent::ProcessEvent(const SEntityEvent& event)
 		f32 fDeltaTime = event.fParam[0];
 
 		Move(fDeltaTime);
+
+		ValidateSelectables();
 
 		if (m_rightClickCountRestartTimePassed < m_timeBetweenRightClickCountRestart) {
 			m_rightClickCountRestartTimePassed += 0.5f * fDeltaTime;
@@ -154,6 +160,14 @@ void CPlayerControllerComponent::InitInputs()
 	//Command
 	m_pInputComponent->RegisterAction("player", "command", [this](int activationMode, float value) {this->CommandPressed(activationMode, value); });
 	m_pInputComponent->BindAction("player", "command", eAID_KeyboardMouse, eKI_Mouse2);
+
+	//Camera ZoomIn
+	m_pInputComponent->RegisterAction("player", "zoomIn", [this](int activationMode, float value) {this->ZoonInPressed(activationMode, value); });
+	m_pInputComponent->BindAction("player", "zoomIn", eAID_KeyboardMouse, eKI_MouseWheelUp);
+
+	//Camera ZoomOut
+	m_pInputComponent->RegisterAction("player", "zoomOut", [this](int activationMode, float value) {this->ZoomOutPressed(activationMode, value); });
+	m_pInputComponent->BindAction("player", "zoomOut", eAID_KeyboardMouse, eKI_MouseWheelDown);
 }
 
 /******************************************************************************************************************************************************************************/
@@ -162,6 +176,10 @@ void CPlayerControllerComponent::Move(f32 deltaTime)
 	Vec3 position = m_pEntity->GetWorldPos();
 	position.x += m_movementOffset.x * m_movementSpeed * deltaTime;
 	position.y += m_movementOffset.y * m_movementSpeed * deltaTime;
+
+	//Apply zoomAmount
+	position.z = m_defaultPosZ - m_currentZoomAmount;
+
 	m_pEntity->SetPos(position);
 }
 
@@ -225,6 +243,18 @@ void CPlayerControllerComponent::CommandPressed(int activationMode, float value)
 	}
 }
 
+/******************************************************************************************************************************************************************************/
+void CPlayerControllerComponent::ZoonInPressed(int activationMode, float value)
+{
+	m_currentZoomAmount = CLAMP(m_currentZoomAmount + (value * gEnv->pTimer->GetFrameTime()), 0, m_cameraMaxZoomAmount);
+}
+
+/******************************************************************************************************************************************************************************/
+void CPlayerControllerComponent::ZoomOutPressed(int activationMode, float value)
+{
+	m_currentZoomAmount = CLAMP(m_currentZoomAmount + (value * gEnv->pTimer->GetFrameTime()), 0, m_cameraMaxZoomAmount);
+}
+
 /*=============================================================================================================================================
 																	Selections
 ==============================================================================================================================================*/
@@ -246,7 +276,7 @@ void CPlayerControllerComponent::SelectSelectables()
 		selectedEntities.append(entity);
 	}
 	m_selectedEntities = selectedEntities;
-	UpdateActionbarItems();
+	//UpdateActionbarItems();
 }
 
 /******************************************************************************************************************************************************************************/
@@ -264,6 +294,28 @@ void CPlayerControllerComponent::DeSelectSelectables()
 
 	m_selectedEntities.clear();
 	m_currentUIItems.clear();
+}
+
+/******************************************************************************************************************************************************************************/
+void CPlayerControllerComponent::ValidateSelectables()
+{
+	if (m_selectedEntities.size() != m_lastSelectablesCheckSize) {
+		m_lastSelectablesCheckSize = m_selectedEntities.size();
+		//m_lastTypesSizeCheck = -1;
+		//m_pInGameUIComponent->ClearActionbarItems();
+		UpdateActionbarItems();
+		SelectSelectables();
+	}
+
+	DynArray<IEntity*> result;
+	for (IEntity* entity : m_selectedEntities) {
+		if (!entity || entity->IsGarbage()) {
+			continue;
+		}
+
+		result.append(entity);
+	}
+	m_selectedEntities = result;
 }
 
 
@@ -333,8 +385,13 @@ void CPlayerControllerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 void CPlayerControllerComponent::UpdateActionbarItems()
 {
 	if (m_selectedEntities.size() <= 0) {
+		m_currentUIItems.clear();
+		m_pInGameUIComponent->ClearActionbarItems();
 		return;
 	}
+
+	m_currentUIItems.clear();
+	m_pInGameUIComponent->ClearActionbarItems();
 
 	CUIItemProviderComponent* pUIItemProviderComponent = m_selectedEntities[0]->GetComponent<CUIItemProviderComponent>();
 	if (m_selectedEntities.size() > 1) {

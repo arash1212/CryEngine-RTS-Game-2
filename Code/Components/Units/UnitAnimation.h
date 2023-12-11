@@ -45,6 +45,7 @@ private:
 
 private:
 	void UpdateAnimations();
+	void UpdateLeftHandPos();
 
 public:
 	void InitAnimations();

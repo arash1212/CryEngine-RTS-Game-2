@@ -69,6 +69,7 @@ void CSelectableComponent::ProcessEvent(const SEntityEvent& event)
 void CSelectableComponent::Select()
 {
 	m_pDecalComponent->Spawn();
+	m_isSelected = true;
 	HighLightGreen();
 }
 
@@ -76,6 +77,7 @@ void CSelectableComponent::Select()
 void CSelectableComponent::DeSelect()
 {
 	m_pDecalComponent->Remove();
+	m_isSelected = false;
 	HighLightBlack();
 }
 
@@ -107,4 +109,10 @@ void CSelectableComponent::HighLightBlack()
 		return;
 	}
 	m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;
+}
+
+/******************************************************************************************************************************************************************************/
+bool CSelectableComponent::IsSelected()
+{
+	return m_isSelected;
 }

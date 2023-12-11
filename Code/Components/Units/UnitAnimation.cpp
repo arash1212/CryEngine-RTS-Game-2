@@ -57,6 +57,7 @@ void CUnitAnimationComponent::ProcessEvent(const SEntityEvent& event)
 	}break;
 	case Cry::Entity::EEvent::Update: {
 		UpdateAnimations();
+		UpdateLeftHandPos();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -117,6 +118,20 @@ void CUnitAnimationComponent::UpdateAnimations()
 		m_activeFragmentId = currentFragmentId;
 		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
 	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CUnitAnimationComponent::UpdateLeftHandPos()
+{
+	if (!m_pAnimationComponent) {
+		return;
+	}
+	CBaseWeaponComponent* pBaseWeaponComponent = m_pEntity->GetComponent<CBaseWeaponComponent>();
+	if (!pBaseWeaponComponent) {
+		return;
+	}
+	m_pAnimationComponent->GetCharacter()->GetISkeletonPose()->SetHumanLimbIK(pBaseWeaponComponent->GetLeftHandPosition(), "LeftHandIK");
+	CryLog("leftHand Pos set");
 }
 
 /******************************************************************************************************************************************************************************/
