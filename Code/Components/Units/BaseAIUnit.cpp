@@ -77,7 +77,7 @@ void CBaseAIUnitComponent::ProcessEvent(const SEntityEvent& event)
 bool CBaseAIUnitComponent::LookForCover()
 {
 	if (!m_pEntityCoverUserComponent->GetCurrentCoverPosition()) {
-		m_pEntityCoverUserComponent->SetCurrentCoverPosition(g_CoverUtils->FindCoverPointsAroundPosition(m_pEntity->GetWorldPos(), 30, 1)[0]);
+		m_pEntityCoverUserComponent->SetCurrentCoverPosition(g_CoverUtils->FindCoverPointsAroundPosition(m_pEntity->GetWorldPos(), m_pEntity, 30, 1)[0]);
 		CryLog("cover set ");
 		return false;
 	}

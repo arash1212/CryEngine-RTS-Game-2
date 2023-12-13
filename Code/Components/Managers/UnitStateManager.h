@@ -11,7 +11,8 @@ enum class EUnitStance {
 	PRONE,
 	CROUCH,
 	STANDING,
-	RUNNING
+	RUNNING,
+	COVER
 };
 
 class CUnitStateManagerComponent : public IEntityComponent {

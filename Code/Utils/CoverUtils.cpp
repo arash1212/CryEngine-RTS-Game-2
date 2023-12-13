@@ -43,7 +43,7 @@ void CoverUtils::FindCoverUsers()
 }
 
 /******************************************************************************************************************************************************************************/
-DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 position, f32 maxDistance, int32 maxPoints)
+DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 position, IEntity* entity, f32 maxDistance, int32 maxPoints)
 {
 	//DynArray<Vec3> result;
 	DynArray<CCoverPosition*> result;
@@ -130,7 +130,7 @@ DynArray<CCoverPosition*> CoverUtils::FindCoverPointsAroundPosition(Vec3 positio
 		int32 size = tempResult.size() >= maxPoints ? maxPoints : tempResult.size();
 		this->SortPointsByDistance(tempResult, position, tempResult.size());
 		for (int32 i = 0; i < size; i++) {
-			if (IsCoverPointValid(tempResult[i])) {
+			if (IsCoverPointValid(entity, tempResult[i])) {
 				result.append(tempResult[i]);
 				pd->AddSphere(tempResult[i]->GetCoverPosition(), 0.3f, ColorF(0.9f, 0.5f, 0), 5.0f);
 			}
@@ -155,10 +155,13 @@ void CoverUtils::SortPointsByDistance(DynArray<CCoverPosition*>& locations, Vec3
 }
 
 /******************************************************************************************************************************************************************************/
-bool CoverUtils::IsCoverPointValid(CCoverPosition* point)
+bool CoverUtils::IsCoverPointValid(IEntity* entity, CCoverPosition* point)
 {
-	for (IEntity* entity : m_coverUsers) {
-		CEntityCoverUserComponent* pEntityCoverUserComponent = entity->GetComponent<CEntityCoverUserComponent>();
+	for (IEntity* pEntity : m_coverUsers) {
+		if (pEntity == entity) {
+			continue;
+		}
+		CEntityCoverUserComponent* pEntityCoverUserComponent = pEntity->GetComponent<CEntityCoverUserComponent>();
 		CCoverPosition* pCoverPosition = pEntityCoverUserComponent->GetCurrentCoverPosition();
 		if (!pCoverPosition) {
 			continue;

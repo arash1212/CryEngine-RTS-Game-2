@@ -12,6 +12,7 @@
 #include <Components/Player/Player.h>
 #include <Components/Player/PlayerController.h>
 #include <Components/Selectables/Health.h>
+#include <Components/Selectables/OwnerInfo.h>
 
 #include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
@@ -56,6 +57,9 @@ void CAttackerComponent::Initialize()
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetComponent<CActionManagerComponent>();
+
+	//OwnerInfoComponent Initialization
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<COwnerInfoComponent>();
 }
 
 /******************************************************************************************************************************************************************************/
@@ -84,8 +88,10 @@ void CAttackerComponent::ProcessEvent(const SEntityEvent& event)
 		}
 		else {
 			//Target/Attack
-			FindRandomTarget();
-			AttackRandomTarget();
+			//if (m_pOwnerInfoComponent->GetOwnerInfo().m_pPlayerComponent->IsAI()) {
+				FindRandomTarget();
+				AttackRandomTarget();
+			//}
 		}
 
 		//Timers
@@ -169,7 +175,7 @@ void CAttackerComponent::AttackRandomTarget()
 	else {
 		//If is not a follwer empty randomAttackTarget
 		if (!m_pAttackInfo.bIsFollower) {
-			m_pRandomAttackTarget = nullptr;
+			//m_pRandomAttackTarget = nullptr;
 		}
 
 		//If is a follwer follow random target if it's not in unit attack range
@@ -187,11 +193,16 @@ void CAttackerComponent::ValidateTarget()
 	if (m_pAIControllerComponent->IsMoving()) {
 		m_pRandomAttackTarget = nullptr;
 	}
+
+	if (!IsTargetVisible(target)) {
+		m_pRandomAttackTarget = nullptr;
+	}
+
 	if (!target || target && target->IsGarbage() || m_pAttackInfo.m_pAttackType == EAttackType::MELEE && !m_pAIControllerComponent->IsDestinationReachable(target->GetWorldPos()) || m_pActionManagerComponent->IsProcessingAnAction() && !m_pActionManagerComponent->GetCurrentAction()->CanBeSkipped()) {
 		m_pAttackTargetEntity = nullptr;
 		m_pRandomAttackTarget = nullptr;
 
-		m_pAttackInfo.m_attackCount = 0;
+		//m_pAttackInfo.m_attackCount = 0;
 	}
 }
 
@@ -208,6 +219,11 @@ void CAttackerComponent::PerformMeleeAttack(IEntity* target)
 /******************************************************************************************************************************************************************************/
 void CAttackerComponent::PerformRangedAttack(IEntity* target)
 {
+	if (!m_pWeaponComponent) {
+		CryWarning(EValidatorModule::VALIDATOR_MODULE_GAME, EValidatorSeverity::VALIDATOR_WARNING, "CAttackerComponent : (PerformRangedAttack) m_pWeaponComponent is null.");
+		m_pWeaponComponent = m_pEntity->GetComponent<CBaseWeaponComponent>();
+		return;
+	}
 	if (m_pWeaponComponent->Fire(target)) {
 		m_pUnitAnimationComponent->PlayRandomAttackAnimation();
 
@@ -217,6 +233,8 @@ void CAttackerComponent::PerformRangedAttack(IEntity* target)
 		Vec3 from = m_pWeaponComponent->GetMuzzlePosition();
 		//from.z += 0.4f;
 		Vec3 to = target->GetWorldPos();
+		to.x += g_MathUtils->GetRandomFloat(0, m_pAttackInfo.m_missChance);
+		to.y += g_MathUtils->GetRandomFloat(0, m_pAttackInfo.m_missChance);
 
 		CUnitStateManagerComponent* pUnitStateManagerComponent = target->GetComponent<CUnitStateManagerComponent>();
 		if (pUnitStateManagerComponent) {
@@ -246,7 +264,7 @@ void CAttackerComponent::ApplyDamageToTarget(IEntity* target)
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackerComponent : (ApplyDamageToTarget) target have to healthComonent assigned.");
 		return;
 	}
-	healthComponent->ApplyDamage(m_damageAmount);
+	healthComponent->ApplyDamage(m_pAttackInfo.m_damageAmount);
 }
 
 /******************************************************************************************************************************************************************************/
@@ -342,10 +360,9 @@ void CAttackerComponent::LookAt(Vec3 position)
 bool CAttackerComponent::IsAttacking()
 {
 	if (!m_pAttackTargetEntity && !m_pRandomAttackTarget) {
-		return false;
+		//return false;
 	}
-	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
-	if (!target) {
+	if (m_pAttackInfo.m_attackCount >= m_pAttackInfo.m_maxAttackCount) {
 		return false;
 	}
 
@@ -383,25 +400,23 @@ bool CAttackerComponent::CanAttack()
 /******************************************************************************************************************************************************************************/
 void CAttackerComponent::SetTargetEntity(IEntity* target)
 {
-	this->m_pRandomAttackTarget = nullptr;
+	this->m_pRandomAttackTarget = target;
 	this->m_pAttackTargetEntity = target;
 }
 
 /******************************************************************************************************************************************************************************/
-void CAttackerComponent::SetDamageAmount(f32 damage)
+IEntity* CAttackerComponent::GetTargetEntity()
 {
-	this->m_damageAmount = damage;
-}
-
-/******************************************************************************************************************************************************************************/
-f32 CAttackerComponent::GetDamageAmount()
-{
-	return m_damageAmount;
+	return m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
 }
 
 /******************************************************************************************************************************************************************************/
 bool CAttackerComponent::IsTargetVisible(IEntity* target)
 {
+	if (!target) {
+		return false;
+	}
+
 	int flags = rwi_pierceability(9);
 	std::array<ray_hit, 4> hits;
 	static IPhysicalEntity* pSkippedEntities[10];
@@ -409,11 +424,17 @@ bool CAttackerComponent::IsTargetVisible(IEntity* target)
 
 	Vec3 currentPos = m_pEntity->GetPos();
 
+	CUnitStateManagerComponent* pUnitStateManagerComponent = target->GetComponent<CUnitStateManagerComponent>();
+	if (!pUnitStateManagerComponent) {
+		return false;
+	}
 	Vec3 origin = Vec3(currentPos.x, currentPos.y, currentPos.z + 1.2f);
 
 	Vec3 targetPosition = target->GetWorldPos();
 	//targetPosition.z += 0.3f;
 	Vec3 targetPos = targetPosition;
+	targetPosition.z += pUnitStateManagerComponent->GetCurrentHeight();
+
 	Vec3 dir = (targetPos - m_pEntity->GetWorldPos()).normalized();
 
 	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(targetPos);
@@ -438,7 +459,7 @@ bool CAttackerComponent::IsTargetVisible(IEntity* target)
 			}
 		//}
 	}
-	return true;
+	return false;
 }
 
 /******************************************************************************************************************************************************************************/

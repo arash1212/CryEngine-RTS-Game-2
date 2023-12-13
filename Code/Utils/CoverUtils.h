@@ -15,11 +15,11 @@ private:
 private:
 
 public:
-	DynArray<CCoverPosition*> FindCoverPointsAroundPosition(Vec3 position, f32 maxDistance, int32 maxPoints);
+	DynArray<CCoverPosition*> FindCoverPointsAroundPosition(Vec3 position, IEntity* entity, f32 maxDistance, int32 maxPoints);
 	void SortPointsByDistance(DynArray<CCoverPosition*>& locations, Vec3 position, int32 size);
 
 	void FindCoverUsers();
-	bool IsCoverPointValid(CCoverPosition* point);
+	bool IsCoverPointValid(IEntity* entity, CCoverPosition* point);
 };
 
 static CoverUtils* g_CoverUtils = new CoverUtils();

@@ -213,7 +213,7 @@ CryAudio::ControlId CBaseWeaponComponent::GetRandomShootSound()
 {
 	int32 randomNum = 0;
 	if (m_shootSounds.Size() > 1) {
-		randomNum = MathUtils::GetRandomInt(0, m_shootSounds.Size() - 1);
+		randomNum = g_MathUtils->GetRandomInt(0, m_shootSounds.Size() - 1);
 	}
 	return m_shootSounds.At(randomNum);
 }
@@ -230,7 +230,7 @@ void CBaseWeaponComponent::UpdateMuzzleFlashes()
 		bCanChangeMuzzleFlash = true;
 	}
 	else if (bCanChangeMuzzleFlash) {
-		int32 randomInt = MathUtils::GetRandomInt(1, 1);
+		int32 randomInt = g_MathUtils->GetRandomInt(1, 1);
 		bCanChangeMuzzleFlash = false;
 		if (randomInt == 1) {
 			m_pMuzzleFlashAttachment1->HideAttachment(false);

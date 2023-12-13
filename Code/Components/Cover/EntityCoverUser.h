@@ -3,6 +3,7 @@
 class CAIControllerComponent;
 class CCoverPosition;
 class CUnitStateManagerComponent;
+class CAttackerComponent;
 
 class CEntityCoverUserComponent final : public IEntityComponent{
 public:
@@ -25,12 +26,15 @@ public:
 private:
 	CAIControllerComponent* m_pAIControllerComponent = nullptr;
 	CUnitStateManagerComponent* m_pUnitStateManagerComponent = nullptr;
+	CAttackerComponent* m_pAttackerComponent = nullptr;
 
 private:
 	CCoverPosition* m_pCurrentCoverPosition = nullptr;
 	bool m_isMovingToCover = false;
 	bool m_isStanceSet = false;
 
+	f32 m_timeBetweenChangingStance = 0.5f;
+	f32 m_changeStanceTimePassed = 0.f;
 public:
 	void MoveToCover();
 

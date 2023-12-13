@@ -27,6 +27,9 @@ UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool isRunnin
 	else if (!m_isRunning && m_pUnitStateManagerComponent->GetStance() == EUnitStance::RUNNING) {
 		m_pUnitStateManagerComponent->SetStance(EUnitStance::STANDING);
 	}
+	else if (m_pUnitStateManagerComponent->GetStance() == EUnitStance::COVER) {
+		m_pUnitStateManagerComponent->SetStance(EUnitStance::CROUCH);
+	}
 
 	m_pEntityCoverUserComponent->SetCurrentCoverPosition(m_pCoverPosition);
 }

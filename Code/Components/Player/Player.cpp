@@ -130,7 +130,7 @@ void CPlayerComponent::CommandUnitsToTakeCover()
 			continue;
 		}
 
-		DynArray<CCoverPosition*> pCoverPositions = g_CoverUtils->FindCoverPointsAroundPosition(m_ownedEntities[i]->GetWorldPos(), 30, m_ownedEntities.size());
+		DynArray<CCoverPosition*> pCoverPositions = g_CoverUtils->FindCoverPointsAroundPosition(m_ownedEntities[i]->GetWorldPos() , m_ownedEntities[i], 30, m_ownedEntities.size());
 		pAIUnitComponent->MoveToCover(pCoverPositions[0]);
 	}
 }

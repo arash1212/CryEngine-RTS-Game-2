@@ -65,7 +65,8 @@ void CEnemySpawnPointComponent::SpawnPlayer()
 	Vec3 vSpawnPosition = m_pEntity->GetWorldPos();
 	Quat qSpawnRotation = m_pEntity->GetRotation();
 	m_pEnemyPlayerEntity = g_EntityUtils->SpawnEntity(vSpawnPosition, qSpawnRotation, nullptr);
-	m_pEnemyPlayerEntity->GetOrCreateComponent<CPlayerComponent>();
+	CPlayerComponent* pPlayerComponent = m_pEnemyPlayerEntity->GetOrCreateComponent<CPlayerComponent>();
+	pPlayerComponent->SetIsAI(true);
 
 	SpawnUnits(m_pEnemyPlayerEntity);
 }

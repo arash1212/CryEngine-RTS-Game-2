@@ -10,6 +10,7 @@ private:
 public:
 	Vec3 GetPositionUnderCursor();
 	Vec2 GetCursorScreenPosition();
+	IEntity* GetEntityUnderCursor();
 };
 
 static MouseUtils* g_MouseUtils = new MouseUtils();

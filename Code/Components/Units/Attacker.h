@@ -9,6 +9,8 @@ class CBaseWeaponComponent;
 class CUnitAnimationComponent;
 class CActionManagerComponent;
 
+static constexpr f32 DEFAULT_DAMAGE_AMOUNT = 5.f;
+
 enum class EAttackType {
 	RANGED,
 	MELEE
@@ -25,9 +27,10 @@ public:
 
 	int32 m_maxAttackCount = 10;
 	int32 m_attackCount = 0;
-};
+	f32 m_missChance = 0.7f;
+	f32 m_damageAmount = DEFAULT_DAMAGE_AMOUNT;
 
-static constexpr f32 DEFAULT_DAMAGE_AMOUNT = 20.F;
+};
 
 class CAttackerComponent final : public IEntityComponent
 {
@@ -62,6 +65,7 @@ private:
 	CBaseWeaponComponent* m_pWeaponComponent = nullptr;
 	CUnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 	CActionManagerComponent* m_pActionManagerComponent = nullptr;
+	COwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 	//Target
 	IEntity* m_pAttackTargetEntity = nullptr;
@@ -71,11 +75,9 @@ private:
 	SUnitAttackInfo m_pAttackInfo;
 
 private:
-	f32 m_damageAmount = DEFAULT_DAMAGE_AMOUNT;
-
 	//Timers
 	f32 m_attackTimePassed = 0.f;
-	f32 m_timeBetweenAttackCountReset = 0.1f;
+	f32 m_timeBetweenAttackCountReset = 2.0f;
 	f32 m_attackCountResetTimePassed = 0.f;
 	f32 m_timeBetweenLookingForRandomTarget = 1.0f;
 	f32 m_lookingForRandomTargetTimePassed = 0.f;
@@ -105,9 +107,7 @@ public:
 	void SetAttackInfo(SUnitAttackInfo attackInfo);
 
 	void SetTargetEntity(IEntity* target);
-
-	void SetDamageAmount(f32 damage);
-	f32 GetDamageAmount();
+	IEntity* GetTargetEntity();
 
 	bool IsTargetVisible(IEntity* target);
 };

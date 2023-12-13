@@ -9,6 +9,8 @@
 #include <Utils/PhysicsUtils.h>
 #include <Components/Cover/CoverPosition.h>
 #include <Components/Managers/UnitStateManager.h>
+#include <Components/Units/Attacker.h>
+#include <Components/Cover/CoverPosition.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -36,6 +38,9 @@ void CEntityCoverUserComponent::Initialize()
 
 	//UnitStateManagerComponent Initialization
 	m_pUnitStateManagerComponent = m_pEntity->GetOrCreateComponent<CUnitStateManagerComponent>();
+
+	//AttackerComponent Initialization
+	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<CAttackerComponent>();
 }
 
 /******************************************************************************************************************************************************************************/
@@ -57,6 +62,7 @@ void CEntityCoverUserComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
+		f32 DeltaTime = event.fParam[0];
 
 		//TODO : CLEAN
 		if (m_pCurrentCoverPosition) {
@@ -65,12 +71,34 @@ void CEntityCoverUserComponent::ProcessEvent(const SEntityEvent& event)
 				m_isMovingToCover = true;
 			}
 			else {
-				if (!m_isStanceSet && m_pCurrentCoverPosition->GetCoverHeight() < GetHeight()) {
-					m_pUnitStateManagerComponent->SetStance(EUnitStance::CROUCH);
+				m_pEntity->SetPos(m_pCurrentCoverPosition->GetCoverPosition());
+
+				if (m_pCurrentCoverPosition->GetCoverHeight() < GetHeight()) {
+					//
+					if (m_pAttackerComponent->IsAttacking() && m_changeStanceTimePassed >= m_timeBetweenChangingStance) {
+						m_pUnitStateManagerComponent->SetStance(EUnitStance::CROUCH);
+						m_changeStanceTimePassed = 0;
+					}
+					else if (m_pAttackerComponent->IsAttacking() && m_changeStanceTimePassed < m_timeBetweenChangingStance) {
+						m_changeStanceTimePassed += 0.5f * DeltaTime;
+					}
+
+					//
+					if (!m_pAttackerComponent->IsAttacking() && m_changeStanceTimePassed >= m_timeBetweenChangingStance)
+					{
+						m_pUnitStateManagerComponent->SetStance(EUnitStance::COVER);
+						m_changeStanceTimePassed = 0;
+					}
+					else if (!m_pAttackerComponent->IsAttacking() && m_changeStanceTimePassed < m_timeBetweenChangingStance) {
+						m_changeStanceTimePassed += 0.5f * DeltaTime;
+					}
+				}
+
+				if (!m_isStanceSet) {
+					Vec3 normal = GetCurrentCoverNormal();
+					m_pAIControllerComponent->LookAt(normal);
 					m_isStanceSet = true;
 				}
-				Vec3 normal = GetCurrentCoverNormal();
-				m_pAIControllerComponent->LookAt(normal);
 			}
 		}
 	}break;
@@ -86,6 +114,7 @@ void CEntityCoverUserComponent::ProcessEvent(const SEntityEvent& event)
 void CEntityCoverUserComponent::MoveToCover()
 {
 	this->m_pAIControllerComponent->MoveTo(m_pCurrentCoverPosition->GetCoverPosition());
+	this->m_pAIControllerComponent->LookAtMovePosition();
 }
 
 /******************************************************************************************************************************************************************************/

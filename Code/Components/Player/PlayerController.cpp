@@ -18,6 +18,7 @@
 #include <Components/Cover/CoverPosition.h>
 #include <Components/Player/Player.h>
 #include <Components/Selectables/OwnerInfo.h>
+#include <Actions/Units/UnitAttackAction.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -119,7 +120,7 @@ void CPlayerControllerComponent::ProcessEvent(const SEntityEvent& event)
 
 		g_CoverUtils->FindCoverUsers();
 
-		g_CoverUtils->FindCoverPointsAroundPosition(g_MouseUtils->GetPositionUnderCursor(), 2, m_selectedEntities.size());
+		g_CoverUtils->FindCoverPointsAroundPosition(g_MouseUtils->GetPositionUnderCursor(), nullptr, 2, m_selectedEntities.size());
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -234,10 +235,19 @@ void CPlayerControllerComponent::SelectionPressed(int activationMode, float valu
 void CPlayerControllerComponent::CommandPressed(int activationMode, float value)
 {
 	Vec3 mousePos = g_MouseUtils->GetPositionUnderCursor();
+	IEntity* pEntityUnderCursor = g_MouseUtils->GetEntityUnderCursor();
 	if (activationMode == eAAM_OnRelease) {
 
 		m_rightClickCount++;
 		m_rightClickCountRestartTimePassed = 0;
+
+		if (pEntityUnderCursor) {
+			COwnerInfoComponent* pOwnerInfoComponent = pEntityUnderCursor->GetComponent<COwnerInfoComponent>();
+			if (pOwnerInfoComponent && pOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam != m_pOwnerInfoComponent->GetOwnerInfo().m_pPlayerTeam) {
+				CommandUnitsToAttack(pEntityUnderCursor);
+				return;
+			}
+		}
 
 		CommandSelectedUnitsToMoveTo(mousePos);
 	}
@@ -325,7 +335,7 @@ void CPlayerControllerComponent::ValidateSelectables()
 
 void CPlayerControllerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 {
-	DynArray<CCoverPosition*> coverPoints = g_CoverUtils->FindCoverPointsAroundPosition(position, 2, m_selectedEntities.size());
+	DynArray<CCoverPosition*> coverPoints = g_CoverUtils->FindCoverPointsAroundPosition(position, nullptr, 2, m_selectedEntities.size());
 
 	int32 row = 0, column = 0;
 	int32 unitsCount = m_selectedEntities.size();
@@ -417,6 +427,26 @@ void CPlayerControllerComponent::ExecuteActionbarItem(int32 index)
 		}
 		else if (m_selectedEntities.size() == 1) {
 			pUIItemProviderComponent->GetAllUIItems()[index]->Execute();
+		}
+	}
+}
+
+/******************************************************************************************************************************************************************************/
+void CPlayerControllerComponent::CommandUnitsToAttack(IEntity* target)
+{
+	for (IEntity* entity : m_selectedEntities) {
+		if (!entity) {
+			continue;
+		}
+
+		CActionManagerComponent* actionManager = entity->GetComponent<CActionManagerComponent>();
+		if (actionManager) {
+			if (target) {
+				actionManager->AddAction(new UnitAttackAction(entity, target));
+			}
+		}
+		else {
+			continue;
 		}
 	}
 }

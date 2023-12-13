@@ -56,15 +56,25 @@ void CSoldier1UnitComponent::Initialize()
 
 	//AttackerComponent Initialization
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<CAttackerComponent>();
-	m_pAttackerComponent->SetDamageAmount(2.f);
 	//Attack Info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::RANGED;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.bIsFollower = false;
 	pAttckInfo.m_maxAttackDistance = 40.f;
-	pAttckInfo.m_maxAttackCount = 7;
+	pAttckInfo.m_maxAttackCount = 20;
 	pAttckInfo.m_timeBetweenAttacks = 0.3f;
+
+	//Set Damage Amount
+	if (m_pOwnerInfoComponent->GetOwnerInfo().m_pPlayerComponent->IsAI()) {
+		pAttckInfo.m_missChance = 0.9f;
+	}
+	else {
+		pAttckInfo.m_missChance = 0.15f;
+		//pAttckInfo.m_damageAmount = pAttckInfo.m_damageAmount * 2;
+		m_pHealthComponent->SetMaxHealth(m_pHealthComponent->GetMaxHealth() * 3);
+	}
+
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//UnitAnimationComponent Initialization

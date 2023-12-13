@@ -91,6 +91,7 @@ private:
 
 	//Commands
 	void CommandSelectedUnitsToMoveTo(Vec3 position);
+	void CommandUnitsToAttack(IEntity* target);
 
 	//UIItems
 	void UpdateActionbarItems();

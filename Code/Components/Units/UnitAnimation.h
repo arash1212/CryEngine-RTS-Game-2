@@ -41,6 +41,7 @@ private:
 	FragmentID m_attack3FragmentId;
 	FragmentID m_crouchFragmentId;
 	FragmentID m_proneFragmentId;
+	FragmentID m_coverFragmentId;
 	FragmentID m_activeFragmentId;
 
 private:

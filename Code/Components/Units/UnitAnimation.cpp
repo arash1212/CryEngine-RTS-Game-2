@@ -114,6 +114,11 @@ void CUnitAnimationComponent::UpdateAnimations()
 		currentFragmentId = m_runFragmentId;
 	}
 
+	//Cover
+	else if (m_pUnitStateManagerComponent->GetStance() == EUnitStance::COVER) {
+		currentFragmentId = m_coverFragmentId;
+	}
+
 	if (m_activeFragmentId != currentFragmentId) {
 		m_activeFragmentId = currentFragmentId;
 		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
@@ -131,7 +136,6 @@ void CUnitAnimationComponent::UpdateLeftHandPos()
 		return;
 	}
 	m_pAnimationComponent->GetCharacter()->GetISkeletonPose()->SetHumanLimbIK(pBaseWeaponComponent->GetLeftHandPosition(), "LeftHandIK");
-	CryLog("leftHand Pos set");
 }
 
 /******************************************************************************************************************************************************************************/
@@ -143,6 +147,7 @@ void CUnitAnimationComponent::InitAnimations()
 	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
 	m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
 	m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
+	m_coverFragmentId = m_pAnimationComponent->GetFragmentId("Cover");
 
 	m_attack1FragmentId = m_pAnimationComponent->GetFragmentId("Attack1");
 	m_attack2FragmentId = m_pAnimationComponent->GetFragmentId("Attack2");

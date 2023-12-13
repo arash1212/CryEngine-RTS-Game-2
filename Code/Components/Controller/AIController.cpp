@@ -40,9 +40,9 @@ void CAIControllerComponent::Initialize()
 	m_pNavigationComponent->SetNavigationAgentType("MediumSizedCharacters");
 	//MovementProperties
 	IEntityNavigationComponent::SMovementProperties pMovementProps;
-	pMovementProps.normalSpeed = 2.f;
-	pMovementProps.minSpeed = 3;
-	pMovementProps.maxSpeed = 4;
+	pMovementProps.normalSpeed = 1.f;
+	pMovementProps.minSpeed = 2;
+	pMovementProps.maxSpeed = 3;
 	pMovementProps.lookAheadDistance = 10.f;
 	pMovementProps.bStopAtEnd = true;
 
