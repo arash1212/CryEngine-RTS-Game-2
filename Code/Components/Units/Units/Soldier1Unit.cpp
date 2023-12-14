@@ -62,17 +62,18 @@ void CSoldier1UnitComponent::Initialize()
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.bIsFollower = false;
 	pAttckInfo.m_maxAttackDistance = 40.f;
-	pAttckInfo.m_maxAttackCount = 20;
+	pAttckInfo.m_maxAttackCount = 15;
 	pAttckInfo.m_timeBetweenAttacks = 0.3f;
 
 	//Set Damage Amount
 	if (m_pOwnerInfoComponent->GetOwnerInfo().m_pPlayerComponent->IsAI()) {
 		pAttckInfo.m_missChance = 0.9f;
+		m_pHealthComponent->SetMaxHealth(70);
 	}
 	else {
 		pAttckInfo.m_missChance = 0.15f;
 		//pAttckInfo.m_damageAmount = pAttckInfo.m_damageAmount * 2;
-		m_pHealthComponent->SetMaxHealth(m_pHealthComponent->GetMaxHealth() * 3);
+		m_pHealthComponent->SetMaxHealth(300);
 	}
 
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);

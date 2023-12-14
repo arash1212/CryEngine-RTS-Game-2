@@ -129,14 +129,15 @@ void CHealthComponent::ProcessEvent(const SEntityEvent& event)
 
 			Vec3 flashPos;
 			Vec2 borders;
-			float scale = 0;
+			float scale = m_pEntity->GetScale().len();
 			Vec3 pos = m_pEntity->GetWorldPos();
+			pos.z += 1;
 			m_pHealthbarUIElement->WorldToFlash(camera->GetCamera().GetMatrix(), pos, flashPos, borders, scale);
 
 			if (m_lastHealthUpdateAmount != m_currentHealth) {
 				SetHealthAmount((int32)m_currentHealth, bIsRed);
 			}
-			SetHealthbarPosition(flashPos.x , flashPos.y - 15);
+			SetHealthbarPosition(flashPos.x - 3, flashPos.y);
 		}
 
 	}break;
