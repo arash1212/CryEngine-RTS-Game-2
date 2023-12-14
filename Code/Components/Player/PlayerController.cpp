@@ -339,8 +339,8 @@ void CPlayerControllerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 
 	int32 row = 0, column = 0;
 	int32 unitsCount = m_selectedEntities.size();
-	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
-	pd->Begin("CommandSelectedUnitsToMoveTo_MovePoints", false);
+	//IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
+	//pd->Begin("CommandSelectedUnitsToMoveTo_MovePoints", false);
 
 	for (int32 i = 0; i < m_selectedEntities.size(); i++) {
 		IEntity* pEntity = m_selectedEntities[i];
@@ -385,7 +385,7 @@ void CPlayerControllerComponent::CommandSelectedUnitsToMoveTo(Vec3 position)
 			f32 height = aabb.max.y - aabb.min.y;
 			Vec3 pos = Vec3(position.x + ((column * (width + 1.0f))), position.y - ((row * (height + 1.0f))), position.z);
 
-			pd->AddSphere(pos, 0.3f, ColorF(0, 1, 0), 3);
+			//pd->AddSphere(pos, 0.3f, ColorF(0, 1, 1), 3);
 			pActionManagerComponent->AddAction(new UnitMoveAction(pEntity, pos, m_rightClickCount >= 2, nullptr));
 		}
 	}

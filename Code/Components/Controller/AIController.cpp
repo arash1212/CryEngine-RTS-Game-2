@@ -43,18 +43,15 @@ void CAIControllerComponent::Initialize()
 	pMovementProps.normalSpeed = 1.f;
 	pMovementProps.minSpeed = 2;
 	pMovementProps.maxSpeed = 3;
-	pMovementProps.lookAheadDistance = 10.f;
+	pMovementProps.lookAheadDistance = 1.f;
 	pMovementProps.bStopAtEnd = true;
-
-	IEntityNavigationComponent::SCollisionAvoidanceProperties pCollisionAvoidanceProperties;
-	pCollisionAvoidanceProperties.radius = 0.6f;
-	m_pNavigationComponent->SetCollisionAvoidanceProperties(pCollisionAvoidanceProperties);
 	m_pNavigationComponent->SetMovementProperties(pMovementProps);
 
 	//Collision avoidance
-	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
-	collisionAvoidanceProps.radius = 0.3f;
-	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
+	IEntityNavigationComponent::SCollisionAvoidanceProperties pCollisionAvoidanceProperties;
+	pCollisionAvoidanceProperties.radius = 0.3f;
+	pCollisionAvoidanceProperties.type = IEntityNavigationComponent::SCollisionAvoidanceProperties::EType::Active;
+	m_pNavigationComponent->SetCollisionAvoidanceProperties(pCollisionAvoidanceProperties);
 
 	//UnitStateManagerComponen Initialization
 	m_pUnitStateManagerComponent = m_pEntity->GetOrCreateComponent<CUnitStateManagerComponent>();
@@ -114,6 +111,9 @@ void CAIControllerComponent::MoveTo(Vec3 position)
 
 	Vec3 pos = SnapToNavmesh(position);
 	m_pNavigationComponent->NavigateTo(pos);
+	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
+	pd->Begin("CommandSelectedUnitsToMoveTo_MovePoints123", false);
+	pd->AddSphere(pos, 0.3f, ColorF(0, 1, 1), 3);
 }
 
 /******************************************************************************************************************************************************************************/
@@ -148,6 +148,12 @@ Vec3 CAIControllerComponent::SnapToNavmesh(Vec3 point)
 	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, point);
 	MNM::SOrderedSnappingMetrics snappingMetrics;
 	snappingMetrics.CreateDefault();
+	MNM::SSnappingMetric metric;
+	metric.type = MNM::SSnappingMetric::EType::Box;
+	metric.horizontalRange = 2000.f;
+	metric.verticalUpRange = 2000.f;
+	metric.verticalDownRange = 2000.f;
+	snappingMetrics.AddMetric(metric);
 	SAcceptAllQueryTrianglesFilter filter;
 	MNM::SPointOnNavMesh pointOnNavMesh = gEnv->pAISystem->GetNavigationSystem()->SnapToNavMesh(agentTypeId, point, snappingMetrics, &filter, &navMeshId);
 	return pointOnNavMesh.GetWorldPosition();
